@@ -132,7 +132,10 @@ function photoSrc(f){
   if(!f) return "";
   let t = f.trim().replace(/\\/g, "/");
   if(/^[a-z]:\//i.test(t) || t.startsWith("/")){ const m = t.match(/\/Tree\/(.+)$/i); t = m ? m[1] : t.split("/").pop(); }
-  return PHOTO_FOLDER + t.split("/").filter(Boolean).map(encodeURIComponent).join("/");
+  const relativeName = t.split("/").filter(Boolean).map(encodeURIComponent).join("/");
+  // Local desktop: read from C:\\Tree. GitHub Pages: read photo files
+  // from the same folder as index.html and family-tree.json.
+  return (location.protocol === "file:" ? PHOTO_FOLDER : "./") + relativeName;
 }
 function initials(n){ return (n||"").split(/\s+/).filter(Boolean).slice(0,2).map(w => w[0].toUpperCase()).join("") || "?"; }
 function avatar(p, size){
@@ -735,8 +738,49 @@ $("btnClear").onclick = () => {
   people = []; save(); focusId = null; render();
 };
 
-focusId = homeId();
-render(); fit();
+/* ============ STARTUP ============ */
+/* On a fresh browser, load the committed family-tree.json automatically.
+   Keep an existing user-edited/imported tree in localStorage unless it is
+   still the built-in sample tree. */
+async function startFamilyTree(){
+  let usePublishedJson = false;
+  try {
+    const saved = localStorage.getItem(KEY);
+    if (!saved) {
+      usePublishedJson = true;
+    } else {
+      const stored = JSON.parse(saved);
+      usePublishedJson = Array.isArray(stored) &&
+        (stored.length === 0 || stored.some(p =>
+          /^s[1-7]$/.test(String(p.id || "")) ||
+          /^Sample /.test(String(p.name || ""))
+        ));
+    }
+  } catch(e) {
+    usePublishedJson = true;
+  }
+
+  if (usePublishedJson) {
+    try {
+      const response = await fetch("./family-tree.json", {cache:"no-store"});
+      if (response.ok) {
+        const data = await response.json();
+        if (Array.isArray(data) && data.every(p => p && p.id)) {
+          people = data;
+          save();
+        }
+      } else {
+        console.warn("Could not load family-tree.json:", response.status);
+      }
+    } catch(e) {
+      console.warn("Could not load family-tree.json. Using saved/sample data.", e);
+    }
+  }
+  focusId = homeId();
+  render();
+  fit();
+}
+startFamilyTree();
 </script>
 </body>
 </html>
