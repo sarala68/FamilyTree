@@ -90,7 +90,6 @@ form .hint{font-size:12px;color:var(--muted);margin-top:2px}
   <button id="btnExport">Export</button>
   <button id="btnImport">Import</button>
   <button id="btnPrint">Print</button>
-  <button id="btnClear">Clear all</button>
   <input type="file" id="file" accept=".json,application/json" hidden>
 </header>
 <div id="viewport"><div id="sizer"><div id="stage"><svg id="lines"></svg></div></div></div>
@@ -132,10 +131,16 @@ function photoSrc(f){
   if(!f) return "";
   let t = f.trim().replace(/\\/g, "/");
   if(/^[a-z]:\//i.test(t) || t.startsWith("/")){ const m = t.match(/\/Tree\/(.+)$/i); t = m ? m[1] : t.split("/").pop(); }
-  const relativeName = t.split("/").filter(Boolean).map(encodeURIComponent).join("/");
-  // Local desktop: read from C:\\Tree. GitHub Pages: read photo files
-  // from the same folder as index.html and family-tree.json.
-  return (location.protocol === "file:" ? PHOTO_FOLDER : "./") + relativeName;
+  const parts = t.split("/").filter(Boolean);
+  // Local desktop: read from C:\\Tree. GitHub Pages: read from the
+  // repository's PICTURE folder. If the saved photo already starts with
+  // PICTURE/, do not add the folder name a second time.
+  if (location.protocol === "file:") {
+    return PHOTO_FOLDER + parts.map(encodeURIComponent).join("/");
+  }
+  const alreadyInPicture = parts.length > 0 && parts[0].toLowerCase() === "picture";
+  const hostedParts = alreadyInPicture ? parts : ["PICTURE", ...parts];
+  return "./" + hostedParts.map(encodeURIComponent).join("/");
 }
 function initials(n){ return (n||"").split(/\s+/).filter(Boolean).slice(0,2).map(w => w[0].toUpperCase()).join("") || "?"; }
 function avatar(p, size){
@@ -482,7 +487,13 @@ $("btnHome").onclick = () => {
   if(!h){ alert("No person named Daniel Jeyakumar was found. Add him and Home will show his family."); return; }
   setFocus(h);
 };
-$("btnFull").onclick = () => { focusId = null; render(); fit(); };
+$("btnFull").onclick = () => {
+  // Clear the focused-family view and render every person in the saved tree.
+  focusId = null;
+  $("viewLabel").textContent = "Full tree";
+  render();
+  fit();
+};
 
 /* ============ SEARCH ============ */
 function runSearch(center){
@@ -733,10 +744,6 @@ $("file").onchange = e => {
   r.readAsText(f); e.target.value = "";
 };
 $("btnPrint").onclick = () => { const k = {scale, panX, panY}; fit(); setTimeout(() => { window.print(); ({scale, panX, panY} = k); applyScale(); }, 100); };
-$("btnClear").onclick = () => {
-  if(!confirm("Remove everyone from the tree? Export first if you want a backup.")) return;
-  people = []; save(); focusId = null; render();
-};
 
 /* ============ STARTUP ============ */
 /* On a fresh browser, load the committed family-tree.json automatically.
