@@ -588,6 +588,23 @@ async function copyIntoTree(file){
 async function pickPhoto(){
   const msg = $("fPhotoMsg");
   try{
+    // On GitHub Pages, select an image already stored in the repository's PICTURE folder.
+    if(location.protocol !== "file:"){
+      msg.textContent = "Loading photos from the GitHub PICTURE folder…";
+      const response = await fetch("https://api.github.com/repos/sarala68/FamilyTree/contents/PICTURE", {cache:"no-store"});
+      if(!response.ok) throw new Error("GitHub returned " + response.status + ". Check that PICTURE exists and is public.");
+      const files = await response.json();
+      const images = files.filter(x => x.type === "file" && /\.(jpe?g|png|gif|webp|bmp|avif)$/i.test(x.name))
+                          .sort((a,b) => a.name.localeCompare(b.name));
+      if(!images.length){ msg.textContent = "No image files found in the GitHub PICTURE folder."; return; }
+      const picker = $("fRepoPhoto");
+      picker.innerHTML = '<option value="">Choose a photo from PICTURE…</option>' +
+        images.map(x => '<option value="' + esc(x.name) + '">' + esc(x.name) + '</option>').join("");
+      picker.style.display = "block";
+      picker.focus();
+      msg.textContent = images.length + " photos found. Select one from the list below.";
+      return;
+    }
     if(window.showOpenFilePicker && window.showDirectoryPicker){
       if(!treeDir){
         msg.textContent = "First, select your C:\\Tree folder and allow access.";
@@ -651,7 +668,8 @@ function showForm(p, ctx){
       <button type="button" id="fPick">Choose photo…</button>
       <input type="file" id="fFile" accept="image/*" hidden>
     </div>
-    <div class="hint" id="fPhotoMsg">Photos are shown from C:\\Tree. Without a photo, initials are shown.</div>
+    <select id="fRepoPhoto" style="display:none;width:100%;margin-top:8px"><option value="">Choose a photo from PICTURE…</option></select>
+    <div class="hint" id="fPhotoMsg">On GitHub Pages, choose an existing photo from PICTURE. When opened locally, photos can be selected from C:\\Tree.</div>
     <div class="row">
       <div><label for="fFather">Father</label><select id="fFather">${opts(p.father, p.id)}</select></div>
       <div><label for="fMother">Mother</label><select id="fMother">${opts(p.mother, p.id)}</select></div>
@@ -663,6 +681,14 @@ function showForm(p, ctx){
   showPrev(photoSrc(p.photo));
   $("fPhoto").oninput = () => showPrev(photoSrc($("fPhoto").value));
   $("fPick").onclick = pickPhoto;
+  $("fRepoPhoto").onchange = () => {
+    const name = $("fRepoPhoto").value;
+    if(!name) return;
+    const value = "PICTURE/" + name;
+    $("fPhoto").value = value;
+    showPrev(photoSrc(value));
+    $("fPhotoMsg").textContent = "Selected " + name + " from GitHub PICTURE. Save this person to keep the selection.";
+  };
   $("fFile").onchange = e => {
     const f = e.target.files[0]; if(!f) return;
     $("fPhoto").value = f.name; showPrev(URL.createObjectURL(f));
