@@ -81,6 +81,7 @@ form .hint{font-size:12px;color:var(--muted);margin-top:2px}
   <span id="viewLabel"></span>
   <button id="btnHome">Home</button>
   <button id="btnFull">Full tree</button>
+  <button id="btnRandomPhotos" title="Assign random photos from the GitHub PICTURE folder">Random photos</button>
   <button class="add" id="btnAdd">Add person</button>
   <input id="search" type="search" placeholder="Search…" title="Type to highlight; press Enter to show that person's family" aria-label="Search name">
   <span class="sp"></span>
@@ -771,6 +772,64 @@ $("file").onchange = e => {
 };
 $("btnPrint").onclick = () => { const k = {scale, panX, panY}; fit(); setTimeout(() => { window.print(); ({scale, panX, panY} = k); applyScale(); }, 100); };
 
+/* ============ RANDOM PHOTOS FROM GITHUB ============ */
+const GITHUB_PICTURE_API = "https://api.github.com/repos/sarala68/FamilyTree/contents/PICTURE";
+const IMAGE_EXTENSIONS = /\.(jpe?g|png|gif|webp|bmp|avif)$/i;
+
+async function getRepositoryPhotos(){
+  const response = await fetch(GITHUB_PICTURE_API, {cache:"no-store"});
+  if(!response.ok) throw new Error("Cannot read GitHub PICTURE folder (HTTP " + response.status + ").");
+  const entries = await response.json();
+  return entries.filter(x => x.type === "file" && IMAGE_EXTENSIONS.test(x.name)).map(x => x.name);
+}
+
+function shuffledCopy(items){
+  const a = items.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+async function assignRandomPhotos(forceAll){
+  if(location.protocol === "file:"){
+    alert("Random photo selection from GitHub works when this page is opened from GitHub Pages.");
+    return;
+  }
+  const button = $("btnRandomPhotos");
+  if(button){ button.disabled = true; button.textContent = "Loading photos…"; }
+  try{
+    const names = await getRepositoryPhotos();
+    if(!names.length) throw new Error("No supported image files were found in the GitHub PICTURE folder.");
+    const targets = forceAll ? people : people.filter(p => {
+      const photo = String(p.photo || "").trim();
+      return !photo || /^[a-z]:[\\/]/i.test(photo) || photo.startsWith("file:");
+    });
+    if(!targets.length && !forceAll){
+      if(button) button.textContent = "Random photos";
+      alert("Every person already has a photo assigned. Click Random photos to replace them with random pictures.");
+      return;
+    }
+    const shuffled = shuffledCopy(names);
+    targets.forEach((person, i) => {
+      // Use each photo once before reusing any, where possible.
+      person.photo = "PICTURE/" + shuffled[i % shuffled.length];
+    });
+    save();
+    render();
+    fit();
+    if(button) button.textContent = "Random photos";
+    alert("Assigned random photos to " + targets.length + " family members from the GitHub PICTURE folder.");
+  }catch(e){
+    if(button) button.textContent = "Random photos";
+    alert("Could not load photos: " + (e && e.message ? e.message : e) + " Make sure the PICTURE folder is in the public FamilyTree repository.");
+  }finally{
+    if(button) button.disabled = false;
+  }
+}
+$("btnRandomPhotos").onclick = () => assignRandomPhotos(true);
+
 /* ============ STARTUP ============ */
 /* On a fresh browser, load the committed family-tree.json automatically.
    Keep an existing user-edited/imported tree in localStorage unless it is
@@ -808,6 +867,31 @@ async function startFamilyTree(){
     } catch(e) {
       console.warn("Could not load family-tree.json. Using saved/sample data.", e);
     }
+  }
+  // Fill blank or old local-PC photo paths automatically from GitHub PICTURE.
+  // Existing hosted photo selections are kept unless the user clicks Random photos.
+  try {
+    const missing = people.some(p => {
+      const photo = String(p.photo || "").trim();
+      return !photo || /^[a-z]:[\\/]/i.test(photo) || photo.startsWith("file:");
+    });
+    if(missing && location.protocol !== "file:"){
+      const names = await getRepositoryPhotos();
+      if(names.length){
+        const shuffled = shuffledCopy(names);
+        let index = 0;
+        people.forEach(p => {
+          const photo = String(p.photo || "").trim();
+          if(!photo || /^[a-z]:[\\/]/i.test(photo) || photo.startsWith("file:")){
+            p.photo = "PICTURE/" + shuffled[index % shuffled.length];
+            index++;
+          }
+        });
+        save();
+      }
+    }
+  } catch(e) {
+    console.warn("Could not assign random photos from GitHub PICTURE:", e);
   }
   focusId = homeId();
   render();
