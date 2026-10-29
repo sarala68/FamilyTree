@@ -42,6 +42,7 @@ svg#lines{position:absolute;left:0;top:0;pointer-events:none}
 .avatar{margin:0 auto;border-radius:50%;background:#dfe7e2;color:var(--forest);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:600;overflow:hidden;border:3px solid var(--o)}
 .avatar.M{border-color:var(--m)} .avatar.F{border-color:var(--f)}
 .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar.fallback-figure{font-family:system-ui,"Apple Color Emoji","Segoe UI Emoji",sans-serif;}
 #empty{padding:60px 24px;text-align:center;color:var(--muted)}
 dialog{border:none;border-radius:8px;padding:0;width:min(540px,94vw);max-height:92vh;box-shadow:0 12px 40px rgba(0,0,0,.35);color:var(--ink);background:var(--card)}
 dialog::backdrop{background:rgba(20,32,28,.5)}
@@ -149,7 +150,18 @@ function avatar(p, size){
   d.className = "avatar " + (p.gender || "");
   d.style.width = d.style.height = size + "px";
   d.style.fontSize = Math.round(size * .36) + "px";
-  const fallback = () => { d.textContent = initials(p.name); };
+  const fallback = () => {
+    d.classList.add("fallback-figure");
+    if(p.gender === "M"){
+      d.textContent = "👨";
+      d.style.fontSize = Math.round(size * .62) + "px";
+    } else if(p.gender === "F"){
+      d.textContent = "👩";
+      d.style.fontSize = Math.round(size * .62) + "px";
+    } else {
+      d.textContent = initials(p.name);
+    }
+  };
   if(p.photo){
     const img = new Image();
     img.alt = p.name || "";
@@ -792,6 +804,19 @@ function shuffledCopy(items){
   return a;
 }
 
+// Match image files to a person's name, ignoring spaces, punctuation, and case.
+// For example, "John Smith.jpg", "john_smith.png", and "JOHNSMITH.jpeg"
+// are all considered name matches. If several match, choose one randomly.
+function normalizedPhotoName(value){
+  return String(value || "").replace(/\.[^.]+$/, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+function choosePhotoForPerson(person, names, fallbackNames){
+  const personName = normalizedPhotoName(person && person.name);
+  const matches = personName ? names.filter(file => normalizedPhotoName(file) === personName) : [];
+  const pool = matches.length ? matches : (fallbackNames && fallbackNames.length ? fallbackNames : names);
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
 async function assignRandomPhotos(forceAll){
   if(location.protocol === "file:"){
     alert("Random photo selection from GitHub works when this page is opened from GitHub Pages.");
@@ -812,9 +837,10 @@ async function assignRandomPhotos(forceAll){
       return;
     }
     const shuffled = shuffledCopy(names);
-    targets.forEach((person, i) => {
-      // Use each photo once before reusing any, where possible.
-      person.photo = "PICTURE/" + shuffled[i % shuffled.length];
+    targets.forEach(person => {
+      // Prefer files named after the person; randomly choose among matching
+      // JPG/JPEG/PNG (or other supported) files. If none match, use a random photo.
+      person.photo = "PICTURE/" + choosePhotoForPerson(person, names, shuffled);
     });
     save();
     render();
@@ -879,12 +905,11 @@ async function startFamilyTree(){
       const names = await getRepositoryPhotos();
       if(names.length){
         const shuffled = shuffledCopy(names);
-        let index = 0;
         people.forEach(p => {
           const photo = String(p.photo || "").trim();
           if(!photo || /^[a-z]:[\\/]/i.test(photo) || photo.startsWith("file:")){
-            p.photo = "PICTURE/" + shuffled[index % shuffled.length];
-            index++;
+            // Prefer a photo whose filename matches the person's name, otherwise random.
+            p.photo = "PICTURE/" + choosePhotoForPerson(p, names, shuffled);
           }
         });
         save();
