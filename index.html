@@ -82,7 +82,6 @@ form .hint{font-size:12px;color:var(--muted);margin-top:2px}
   <span id="viewLabel"></span>
   <button id="btnHome">Home</button>
   <button id="btnFull">Full tree</button>
-  <button id="btnRandomPhotos" title="Assign random photos from the GitHub PICTURE folder">Random photos</button>
   <button class="add" id="btnAdd">Add person</button>
   <input id="search" type="search" placeholder="Search…" title="Type to highlight; press Enter to show that person's family" aria-label="Search name">
   <span class="sp"></span>
@@ -784,7 +783,7 @@ $("file").onchange = e => {
 };
 $("btnPrint").onclick = () => { const k = {scale, panX, panY}; fit(); setTimeout(() => { window.print(); ({scale, panX, panY} = k); applyScale(); }, 100); };
 
-/* ============ RANDOM PHOTOS FROM GITHUB ============ */
+/* ============ MATCH PHOTOS TO PERSON NAMES ============ */
 const GITHUB_PICTURE_API = "https://api.github.com/repos/sarala68/FamilyTree/contents/PICTURE";
 const IMAGE_EXTENSIONS = /\.(jpe?g|png|gif|webp|bmp|avif)$/i;
 
@@ -795,66 +794,34 @@ async function getRepositoryPhotos(){
   return entries.filter(x => x.type === "file" && IMAGE_EXTENSIONS.test(x.name)).map(x => x.name);
 }
 
-function shuffledCopy(items){
-  const a = items.slice();
-  for(let i = a.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-// Match image files to a person's name, ignoring spaces, punctuation, and case.
-// For example, "John Smith.jpg", "john_smith.png", and "JOHNSMITH.jpeg"
-// are all considered name matches. If several match, choose one randomly.
+// Compare names without file extensions, spaces, punctuation, or letter case.
+// Examples: "John Smith.jpg" and "john_smith.PNG" match "John Smith".
 function normalizedPhotoName(value){
   return String(value || "").replace(/\.[^.]+$/, "").toLowerCase().replace(/[^a-z0-9]/g, "");
 }
-function choosePhotoForPerson(person, names, fallbackNames){
-  const personName = normalizedPhotoName(person && person.name);
-  const matches = personName ? names.filter(file => normalizedPhotoName(file) === personName) : [];
-  const pool = matches.length ? matches : (fallbackNames && fallbackNames.length ? fallbackNames : names);
-  return pool[Math.floor(Math.random() * pool.length)];
+
+function matchingPhoto(person, names){
+  const target = normalizedPhotoName(person && person.name);
+  const matches = target ? names.filter(file => normalizedPhotoName(file) === target) : [];
+  // If several files match the person's name (e.g. JPG and PNG), choose randomly.
+  return matches.length ? matches[Math.floor(Math.random() * matches.length)] : "";
 }
 
-async function assignRandomPhotos(forceAll){
-  if(location.protocol === "file:"){
-    alert("Random photo selection from GitHub works when this page is opened from GitHub Pages.");
-    return;
-  }
-  const button = $("btnRandomPhotos");
-  if(button){ button.disabled = true; button.textContent = "Loading photos…"; }
+async function applyNameMatchedPhotos(){
+  if(location.protocol === "file:") return; // GitHub Pages can list repository files; local file pages cannot.
   try{
     const names = await getRepositoryPhotos();
-    if(!names.length) throw new Error("No supported image files were found in the GitHub PICTURE folder.");
-    const targets = forceAll ? people : people.filter(p => {
-      const photo = String(p.photo || "").trim();
-      return !photo || /^[a-z]:[\\/]/i.test(photo) || photo.startsWith("file:");
-    });
-    if(!targets.length && !forceAll){
-      if(button) button.textContent = "Random photos";
-      alert("Every person already has a photo assigned. Click Random photos to replace them with random pictures.");
-      return;
-    }
-    const shuffled = shuffledCopy(names);
-    targets.forEach(person => {
-      // Prefer files named after the person; randomly choose among matching
-      // JPG/JPEG/PNG (or other supported) files. If none match, use a random photo.
-      person.photo = "PICTURE/" + choosePhotoForPerson(person, names, shuffled);
+    people.forEach(person => {
+      const match = matchingPhoto(person, names);
+      // Never show an unrelated photo. A missing match leaves photo blank so
+      // avatar() displays the male/female figure (or initials if gender is unset).
+      person.photo = match ? "PICTURE/" + match : "";
     });
     save();
-    render();
-    fit();
-    if(button) button.textContent = "Random photos";
-    alert("Assigned random photos to " + targets.length + " family members from the GitHub PICTURE folder.");
   }catch(e){
-    if(button) button.textContent = "Random photos";
-    alert("Could not load photos: " + (e && e.message ? e.message : e) + " Make sure the PICTURE folder is in the public FamilyTree repository.");
-  }finally{
-    if(button) button.disabled = false;
+    console.warn("Could not match photos from GitHub PICTURE:", e);
   }
 }
-$("btnRandomPhotos").onclick = () => assignRandomPhotos(true);
 
 /* ============ STARTUP ============ */
 /* On a fresh browser, load the committed family-tree.json automatically.
@@ -894,30 +861,9 @@ async function startFamilyTree(){
       console.warn("Could not load family-tree.json. Using saved/sample data.", e);
     }
   }
-  // Fill blank or old local-PC photo paths automatically from GitHub PICTURE.
-  // Existing hosted photo selections are kept unless the user clicks Random photos.
-  try {
-    const missing = people.some(p => {
-      const photo = String(p.photo || "").trim();
-      return !photo || /^[a-z]:[\\/]/i.test(photo) || photo.startsWith("file:");
-    });
-    if(missing && location.protocol !== "file:"){
-      const names = await getRepositoryPhotos();
-      if(names.length){
-        const shuffled = shuffledCopy(names);
-        people.forEach(p => {
-          const photo = String(p.photo || "").trim();
-          if(!photo || /^[a-z]:[\\/]/i.test(photo) || photo.startsWith("file:")){
-            // Prefer a photo whose filename matches the person's name, otherwise random.
-            p.photo = "PICTURE/" + choosePhotoForPerson(p, names, shuffled);
-          }
-        });
-        save();
-      }
-    }
-  } catch(e) {
-    console.warn("Could not assign random photos from GitHub PICTURE:", e);
-  }
+  // Only use photos whose filenames match each person's name. Unmatched people
+  // show the male/female figure fallback instead of an unrelated photo.
+  await applyNameMatchedPhotos();
   focusId = homeId();
   render();
   fit();
