@@ -164,7 +164,16 @@ function avatar(p, size){
   if(p.photo){
     const img = new Image();
     img.alt = p.name || "";
-    img.onerror = () => { d.textContent = ""; fallback(); };
+    // GitHub Pages is case-sensitive (.JPG vs .jpg). If the saved name fails,
+    // quietly try the other common extensions before showing the figure.
+    const base = photoSrc(p.photo).replace(/\.[^./]+$/, "");
+    const tries = ["png","PNG","jpg","JPG","jpeg","JPEG","webp"]
+      .map(e => base + "." + e).filter(u => u !== photoSrc(p.photo));
+    img.onerror = () => {
+      const next = tries.shift();
+      if(next){ img.src = next; return; }
+      img.remove(); d.textContent = ""; fallback();
+    };
     img.src = photoSrc(p.photo);
     d.appendChild(img);
   } else fallback();
@@ -800,69 +809,72 @@ function normalizedPhotoName(value){
   return String(value || "").replace(/\.[^.]+$/, "").toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
+const EXT_ORDER = ["png","jpg","jpeg","webp","gif","bmp","avif"];
+const extRank = f => { const i = EXT_ORDER.indexOf((f.split(".").pop() || "").toLowerCase()); return i < 0 ? 99 : i; };
+
+// Match each person to the REAL file name in the PICTURE folder.
+// 1) the file already saved on the person (exact, then ignoring case/spaces/extension)
+// 2) a file named after the person
+// No random choice: the same person always gets the same photo.
 function matchingPhoto(person, names){
-  const target = normalizedPhotoName(person && person.name);
-  const matches = target ? names.filter(file => normalizedPhotoName(file) === target) : [];
-  // If several files match the person's name (e.g. JPG and PNG), choose randomly.
-  return matches.length ? matches[Math.floor(Math.random() * matches.length)] : "";
+  const pick = list => list.length ? list.slice().sort((x, y) => extRank(x) - extRank(y) || x.localeCompare(y))[0] : "";
+  const saved = String(person.photo || "").split("/").pop();
+  if(saved && names.includes(saved)) return saved;
+  const byNorm = target => target ? names.filter(f => normalizedPhotoName(f) === target) : [];
+  return pick(byNorm(normalizedPhotoName(saved))) || pick(byNorm(normalizedPhotoName(person.name)));
 }
 
 async function applyNameMatchedPhotos(){
-  if(location.protocol === "file:") return; // GitHub Pages can list repository files; local file pages cannot.
+  if(location.protocol === "file:") return; // local pages cannot list repository files
   try{
     const names = await getRepositoryPhotos();
     people.forEach(person => {
       const match = matchingPhoto(person, names);
-      // Never show an unrelated photo. A missing match leaves photo blank so
-      // avatar() displays the male/female figure (or initials if gender is unset).
+      // No matching file in PICTURE -> blank, so the male/female figure shows.
       person.photo = match ? "PICTURE/" + match : "";
     });
     save();
   }catch(e){
+    // GitHub API unreachable or rate-limited: keep the saved paths; avatar() retries extensions.
     console.warn("Could not match photos from GitHub PICTURE:", e);
   }
 }
 
 /* ============ STARTUP ============ */
-/* On a fresh browser, load the committed family-tree.json automatically.
-   Keep an existing user-edited/imported tree in localStorage unless it is
-   still the built-in sample tree. */
+/* family-tree.json in the repository is the master copy.
+   Every PC loads it; when it has CHANGED since this browser last loaded it,
+   the browser's old saved copy is replaced. (Edits made on one PC only live in
+   that browser until you Export and commit family-tree.json to GitHub.) */
+const BASE_KEY = "familyTreeBase_v1";
+function hashStr(s){ let h = 5381; for(let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return h + ":" + s.length; }
+// Accepts the Export format (an array) and also a raw browser-storage dump.
+function toPeopleArray(data){
+  if(Array.isArray(data)) return data;
+  if(data && typeof data.familyTreeData_v1 === "string"){ try{ const a = JSON.parse(data.familyTreeData_v1); if(Array.isArray(a)) return a; }catch(e){} }
+  if(data && Array.isArray(data.familyTreeData_v1)) return data.familyTreeData_v1;
+  return null;
+}
 async function startFamilyTree(){
-  let usePublishedJson = false;
-  try {
-    const saved = localStorage.getItem(KEY);
-    if (!saved) {
-      usePublishedJson = true;
-    } else {
-      const stored = JSON.parse(saved);
-      usePublishedJson = Array.isArray(stored) &&
-        (stored.length === 0 || stored.some(p =>
-          /^s[1-7]$/.test(String(p.id || "")) ||
-          /^Sample /.test(String(p.name || ""))
-        ));
-    }
-  } catch(e) {
-    usePublishedJson = true;
-  }
-
-  if (usePublishedJson) {
-    try {
-      const response = await fetch("./family-tree.json", {cache:"no-store"});
-      if (response.ok) {
-        const data = await response.json();
-        if (Array.isArray(data) && data.every(p => p && p.id)) {
-          people = data;
-          save();
+  try{
+    const response = await fetch("./family-tree.json", {cache:"no-store"});
+    if(!response.ok){ console.warn("Could not load family-tree.json:", response.status); }
+    else{
+      const arr = toPeopleArray(await response.json());
+      if(arr && arr.length && arr.every(p => p && p.id)){
+        const h = hashStr(JSON.stringify(arr));
+        let lastBase = null, saved = null;
+        try{ lastBase = localStorage.getItem(BASE_KEY); saved = localStorage.getItem(KEY); }catch(e){}
+        let isSample = true;
+        try{ const st = JSON.parse(saved); isSample = !Array.isArray(st) || st.length === 0 || st.some(p => /^s[1-7]$/.test(String(p.id || "")) || /^Sample /.test(String(p.name || ""))); }catch(e){}
+        if(isSample || lastBase !== h){
+          people = arr; save();
+          try{ localStorage.setItem(BASE_KEY, h); }catch(e){}
         }
-      } else {
-        console.warn("Could not load family-tree.json:", response.status);
-      }
-    } catch(e) {
-      console.warn("Could not load family-tree.json. Using saved/sample data.", e);
+      } else console.warn("family-tree.json is not a valid list of people.");
     }
+  }catch(e){
+    console.warn("Could not load family-tree.json. Using saved/sample data.", e);
   }
-  // Only use photos whose filenames match each person's name. Unmatched people
-  // show the male/female figure fallback instead of an unrelated photo.
   await applyNameMatchedPhotos();
   focusId = homeId();
   render();
