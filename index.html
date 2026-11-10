@@ -42,6 +42,7 @@ svg#lines{position:absolute;left:0;top:0;pointer-events:none}
 .avatar{margin:0 auto;border-radius:50%;background:#dfe7e2;color:var(--forest);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:600;overflow:hidden;border:3px solid var(--o)}
 .avatar.M{border-color:var(--m)} .avatar.F{border-color:var(--f)}
 .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar.fallback-figure{font-family:system-ui,"Apple Color Emoji","Segoe UI Emoji",sans-serif;}
 #empty{padding:60px 24px;text-align:center;color:var(--muted)}
 dialog{border:none;border-radius:8px;padding:0;width:min(540px,94vw);max-height:92vh;box-shadow:0 12px 40px rgba(0,0,0,.35);color:var(--ink);background:var(--card)}
 dialog::backdrop{background:rgba(20,32,28,.5)}
@@ -90,7 +91,6 @@ form .hint{font-size:12px;color:var(--muted);margin-top:2px}
   <button id="btnExport">Export</button>
   <button id="btnImport">Import</button>
   <button id="btnPrint">Print</button>
-  <button id="btnClear">Clear all</button>
   <input type="file" id="file" accept=".json,application/json" hidden>
 </header>
 <div id="viewport"><div id="sizer"><div id="stage"><svg id="lines"></svg></div></div></div>
@@ -132,7 +132,16 @@ function photoSrc(f){
   if(!f) return "";
   let t = f.trim().replace(/\\/g, "/");
   if(/^[a-z]:\//i.test(t) || t.startsWith("/")){ const m = t.match(/\/Tree\/(.+)$/i); t = m ? m[1] : t.split("/").pop(); }
-  return PHOTO_FOLDER + t.split("/").filter(Boolean).map(encodeURIComponent).join("/");
+  const parts = t.split("/").filter(Boolean);
+  // Local desktop: read from C:\\Tree. GitHub Pages: read from the
+  // repository's PICTURE folder. If the saved photo already starts with
+  // PICTURE/, do not add the folder name a second time.
+  if (location.protocol === "file:") {
+    return PHOTO_FOLDER + parts.map(encodeURIComponent).join("/");
+  }
+  const alreadyInPicture = parts.length > 0 && parts[0].toLowerCase() === "picture";
+  const hostedParts = alreadyInPicture ? parts : ["PICTURE", ...parts];
+  return "./" + hostedParts.map(encodeURIComponent).join("/");
 }
 function initials(n){ return (n||"").split(/\s+/).filter(Boolean).slice(0,2).map(w => w[0].toUpperCase()).join("") || "?"; }
 function avatar(p, size){
@@ -140,11 +149,31 @@ function avatar(p, size){
   d.className = "avatar " + (p.gender || "");
   d.style.width = d.style.height = size + "px";
   d.style.fontSize = Math.round(size * .36) + "px";
-  const fallback = () => { d.textContent = initials(p.name); };
+  const fallback = () => {
+    d.classList.add("fallback-figure");
+    if(p.gender === "M"){
+      d.textContent = "👨";
+      d.style.fontSize = Math.round(size * .62) + "px";
+    } else if(p.gender === "F"){
+      d.textContent = "👩";
+      d.style.fontSize = Math.round(size * .62) + "px";
+    } else {
+      d.textContent = initials(p.name);
+    }
+  };
   if(p.photo){
     const img = new Image();
     img.alt = p.name || "";
-    img.onerror = () => { d.textContent = ""; fallback(); };
+    // GitHub Pages is case-sensitive (.JPG vs .jpg). If the saved name fails,
+    // quietly try the other common extensions before showing the figure.
+    const base = photoSrc(p.photo).replace(/\.[^./]+$/, "");
+    const tries = ["png","PNG","jpg","JPG","jpeg","JPEG","webp"]
+      .map(e => base + "." + e).filter(u => u !== photoSrc(p.photo));
+    img.onerror = () => {
+      const next = tries.shift();
+      if(next){ img.src = next; return; }
+      img.remove(); d.textContent = ""; fallback();
+    };
     img.src = photoSrc(p.photo);
     d.appendChild(img);
   } else fallback();
@@ -479,7 +508,13 @@ $("btnHome").onclick = () => {
   if(!h){ alert("No person named Daniel Jeyakumar was found. Add him and Home will show his family."); return; }
   setFocus(h);
 };
-$("btnFull").onclick = () => { focusId = null; render(); fit(); };
+$("btnFull").onclick = () => {
+  // Clear the focused-family view and render every person in the saved tree.
+  focusId = null;
+  $("viewLabel").textContent = "Full tree";
+  render();
+  fit();
+};
 
 /* ============ SEARCH ============ */
 function runSearch(center){
@@ -574,6 +609,23 @@ async function copyIntoTree(file){
 async function pickPhoto(){
   const msg = $("fPhotoMsg");
   try{
+    // On GitHub Pages, select an image already stored in the repository's PICTURE folder.
+    if(location.protocol !== "file:"){
+      msg.textContent = "Loading photos from the GitHub PICTURE folder…";
+      const response = await fetch("https://api.github.com/repos/sarala68/FamilyTree/contents/PICTURE", {cache:"no-store"});
+      if(!response.ok) throw new Error("GitHub returned " + response.status + ". Check that PICTURE exists and is public.");
+      const files = await response.json();
+      const images = files.filter(x => x.type === "file" && /\.(jpe?g|png|gif|webp|bmp|avif)$/i.test(x.name))
+                          .sort((a,b) => a.name.localeCompare(b.name));
+      if(!images.length){ msg.textContent = "No image files found in the GitHub PICTURE folder."; return; }
+      const picker = $("fRepoPhoto");
+      picker.innerHTML = '<option value="">Choose a photo from PICTURE…</option>' +
+        images.map(x => '<option value="' + esc(x.name) + '">' + esc(x.name) + '</option>').join("");
+      picker.style.display = "block";
+      picker.focus();
+      msg.textContent = images.length + " photos found. Select one from the list below.";
+      return;
+    }
     if(window.showOpenFilePicker && window.showDirectoryPicker){
       if(!treeDir){
         msg.textContent = "First, select your C:\\Tree folder and allow access.";
@@ -637,7 +689,8 @@ function showForm(p, ctx){
       <button type="button" id="fPick">Choose photo…</button>
       <input type="file" id="fFile" accept="image/*" hidden>
     </div>
-    <div class="hint" id="fPhotoMsg">Photos are shown from C:\\Tree. Without a photo, initials are shown.</div>
+    <select id="fRepoPhoto" style="display:none;width:100%;margin-top:8px"><option value="">Choose a photo from PICTURE…</option></select>
+    <div class="hint" id="fPhotoMsg">On GitHub Pages, choose an existing photo from PICTURE. When opened locally, photos can be selected from C:\\Tree.</div>
     <div class="row">
       <div><label for="fFather">Father</label><select id="fFather">${opts(p.father, p.id)}</select></div>
       <div><label for="fMother">Mother</label><select id="fMother">${opts(p.mother, p.id)}</select></div>
@@ -649,6 +702,14 @@ function showForm(p, ctx){
   showPrev(photoSrc(p.photo));
   $("fPhoto").oninput = () => showPrev(photoSrc($("fPhoto").value));
   $("fPick").onclick = pickPhoto;
+  $("fRepoPhoto").onchange = () => {
+    const name = $("fRepoPhoto").value;
+    if(!name) return;
+    const value = "PICTURE/" + name;
+    $("fPhoto").value = value;
+    showPrev(photoSrc(value));
+    $("fPhotoMsg").textContent = "Selected " + name + " from GitHub PICTURE. Save this person to keep the selection.";
+  };
   $("fFile").onchange = e => {
     const f = e.target.files[0]; if(!f) return;
     $("fPhoto").value = f.name; showPrev(URL.createObjectURL(f));
@@ -730,13 +791,96 @@ $("file").onchange = e => {
   r.readAsText(f); e.target.value = "";
 };
 $("btnPrint").onclick = () => { const k = {scale, panX, panY}; fit(); setTimeout(() => { window.print(); ({scale, panX, panY} = k); applyScale(); }, 100); };
-$("btnClear").onclick = () => {
-  if(!confirm("Remove everyone from the tree? Export first if you want a backup.")) return;
-  people = []; save(); focusId = null; render();
-};
 
-focusId = homeId();
-render(); fit();
+/* ============ MATCH PHOTOS TO PERSON NAMES ============ */
+const GITHUB_PICTURE_API = "https://api.github.com/repos/sarala68/FamilyTree/contents/PICTURE";
+const IMAGE_EXTENSIONS = /\.(jpe?g|png|gif|webp|bmp|avif)$/i;
+
+async function getRepositoryPhotos(){
+  const response = await fetch(GITHUB_PICTURE_API, {cache:"no-store"});
+  if(!response.ok) throw new Error("Cannot read GitHub PICTURE folder (HTTP " + response.status + ").");
+  const entries = await response.json();
+  return entries.filter(x => x.type === "file" && IMAGE_EXTENSIONS.test(x.name)).map(x => x.name);
+}
+
+// Compare names without file extensions, spaces, punctuation, or letter case.
+// Examples: "John Smith.jpg" and "john_smith.PNG" match "John Smith".
+function normalizedPhotoName(value){
+  return String(value || "").replace(/\.[^.]+$/, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+const EXT_ORDER = ["png","jpg","jpeg","webp","gif","bmp","avif"];
+const extRank = f => { const i = EXT_ORDER.indexOf((f.split(".").pop() || "").toLowerCase()); return i < 0 ? 99 : i; };
+
+// Match each person to the REAL file name in the PICTURE folder.
+// 1) the file already saved on the person (exact, then ignoring case/spaces/extension)
+// 2) a file named after the person
+// No random choice: the same person always gets the same photo.
+function matchingPhoto(person, names){
+  const pick = list => list.length ? list.slice().sort((x, y) => extRank(x) - extRank(y) || x.localeCompare(y))[0] : "";
+  const saved = String(person.photo || "").split("/").pop();
+  if(saved && names.includes(saved)) return saved;
+  const byNorm = target => target ? names.filter(f => normalizedPhotoName(f) === target) : [];
+  return pick(byNorm(normalizedPhotoName(saved))) || pick(byNorm(normalizedPhotoName(person.name)));
+}
+
+async function applyNameMatchedPhotos(){
+  if(location.protocol === "file:") return; // local pages cannot list repository files
+  try{
+    const names = await getRepositoryPhotos();
+    people.forEach(person => {
+      const match = matchingPhoto(person, names);
+      // No matching file in PICTURE -> blank, so the male/female figure shows.
+      person.photo = match ? "PICTURE/" + match : "";
+    });
+    save();
+  }catch(e){
+    // GitHub API unreachable or rate-limited: keep the saved paths; avatar() retries extensions.
+    console.warn("Could not match photos from GitHub PICTURE:", e);
+  }
+}
+
+/* ============ STARTUP ============ */
+/* family-tree.json in the repository is the master copy.
+   Every PC loads it; when it has CHANGED since this browser last loaded it,
+   the browser's old saved copy is replaced. (Edits made on one PC only live in
+   that browser until you Export and commit family-tree.json to GitHub.) */
+const BASE_KEY = "familyTreeBase_v1";
+function hashStr(s){ let h = 5381; for(let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return h + ":" + s.length; }
+// Accepts the Export format (an array) and also a raw browser-storage dump.
+function toPeopleArray(data){
+  if(Array.isArray(data)) return data;
+  if(data && typeof data.familyTreeData_v1 === "string"){ try{ const a = JSON.parse(data.familyTreeData_v1); if(Array.isArray(a)) return a; }catch(e){} }
+  if(data && Array.isArray(data.familyTreeData_v1)) return data.familyTreeData_v1;
+  return null;
+}
+async function startFamilyTree(){
+  try{
+    const response = await fetch("./family-tree.json", {cache:"no-store"});
+    if(!response.ok){ console.warn("Could not load family-tree.json:", response.status); }
+    else{
+      const arr = toPeopleArray(await response.json());
+      if(arr && arr.length && arr.every(p => p && p.id)){
+        const h = hashStr(JSON.stringify(arr));
+        let lastBase = null, saved = null;
+        try{ lastBase = localStorage.getItem(BASE_KEY); saved = localStorage.getItem(KEY); }catch(e){}
+        let isSample = true;
+        try{ const st = JSON.parse(saved); isSample = !Array.isArray(st) || st.length === 0 || st.some(p => /^s[1-7]$/.test(String(p.id || "")) || /^Sample /.test(String(p.name || ""))); }catch(e){}
+        if(isSample || lastBase !== h){
+          people = arr; save();
+          try{ localStorage.setItem(BASE_KEY, h); }catch(e){}
+        }
+      } else console.warn("family-tree.json is not a valid list of people.");
+    }
+  }catch(e){
+    console.warn("Could not load family-tree.json. Using saved/sample data.", e);
+  }
+  await applyNameMatchedPhotos();
+  focusId = homeId();
+  render();
+  fit();
+}
+startFamilyTree();
 </script>
 </body>
 </html>
