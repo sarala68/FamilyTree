@@ -28,6 +28,11 @@ header .sp{flex:1}
 #viewport{flex:1;overflow:hidden;position:relative;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
 #sizer{position:absolute;inset:0}
 body.dragging, body.dragging *{cursor:grabbing !important}
+#btnGH .gdot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#9aa7a1;margin-left:4px;vertical-align:baseline}
+#btnGH .gdot.ok{background:#5fd08a} #btnGH .gdot.dirty{background:#f0b429} #btnGH .gdot.bad{background:#e5675c}
+.ghnote{font-size:13px;color:var(--muted);margin:8px 0}
+.ghmsg{margin:10px 0 0;min-height:20px;font-size:14px}
+.ghmsg.err{color:#9b2c2c} .ghmsg.ok{color:#1f6b45}
 #viewLabel{font:italic 15px Georgia,serif;opacity:.9;margin-right:6px}
 #stage{position:absolute;left:0;top:0;transform-origin:0 0}
 svg#lines{position:absolute;left:0;top:0;pointer-events:none}
@@ -90,6 +95,7 @@ form .hint{font-size:12px;color:var(--muted);margin-top:2px}
   <button id="zFit">Fit</button>
   <button id="btnExport">Export</button>
   <button id="btnImport">Import</button>
+  <button id="btnGH" title="Sync with GitHub">GitHub <span id="gdot" class="gdot"></span></button>
   <button id="btnPrint">Print</button>
   <input type="file" id="file" accept=".json,application/json" hidden>
 </header>
@@ -121,7 +127,17 @@ function load(){
   try{ const s = localStorage.getItem(KEY); if(s){ const a = JSON.parse(s); if(Array.isArray(a)) return a; } }catch(e){}
   return JSON.parse(JSON.stringify(SAMPLE));
 }
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(people)); }catch(e){} }
+const DIRTY = "familyTreeDirty", SYNCSHA = "familyTreeSyncSha";
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(people)); localStorage.setItem(DIRTY, "1"); }catch(e){} updateSync(); }
+function saveQuiet(){ try{ localStorage.setItem(KEY, JSON.stringify(people)); }catch(e){} }   // automatic changes (photo matching): not an edit
+function saveClean(sha){
+  try{
+    localStorage.setItem(KEY, JSON.stringify(people)); localStorage.setItem(DIRTY, "0");
+    if(sha) localStorage.setItem(SYNCSHA, sha);
+    localStorage.setItem(BASE_KEY, hashStr(JSON.stringify(people)));
+  }catch(e){}
+  updateSync();
+}
 const $ = id => document.getElementById(id);
 const byId = id => people.find(p => p.id === id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -833,12 +849,117 @@ async function applyNameMatchedPhotos(){
       // No matching file in PICTURE -> blank, so the male/female figure shows.
       person.photo = match ? "PICTURE/" + match : "";
     });
-    save();
+    saveQuiet();
   }catch(e){
     // GitHub API unreachable or rate-limited: keep the saved paths; avatar() retries extensions.
     console.warn("Could not match photos from GitHub PICTURE:", e);
   }
 }
+
+/* ============ GITHUB SYNC ============ */
+const GH_KEY = "familyTreeGitHub";
+let syncState = "unknown", syncNote = "", loadedSha = null;
+function ghCfg(){
+  const d = {owner:"sarala68", repo:"FamilyTree", path:"family-tree.json", branch:"", token:""};
+  if(/\.github\.io$/i.test(location.hostname)){
+    d.owner = location.hostname.split(".")[0];
+    const seg = location.pathname.split("/").filter(Boolean)[0]; if(seg && !/\.html?$/i.test(seg)) d.repo = seg;
+  }
+  try{ return Object.assign(d, JSON.parse(localStorage.getItem(GH_KEY) || "{}")); }catch(e){ return d; }
+}
+const utf8ToB64 = t => { const b = new TextEncoder().encode(t); let bin = ""; for(let i = 0; i < b.length; i += 0x8000) bin += String.fromCharCode(...b.subarray(i, i + 0x8000)); return btoa(bin); };
+const b64ToUtf8 = t => new TextDecoder().decode(Uint8Array.from(atob(t.replace(/\s/g, "")), c => c.charCodeAt(0)));
+function ghUrl(c, withRef){
+  return "https://api.github.com/repos/" + encodeURIComponent(c.owner) + "/" + encodeURIComponent(c.repo) + "/contents/" +
+    c.path.split("/").map(encodeURIComponent).join("/") + (withRef && c.branch ? "?ref=" + encodeURIComponent(c.branch) : "");
+}
+function ghHeaders(c, json){
+  const h = {"Accept":"application/vnd.github+json"};
+  if(c.token) h.Authorization = "Bearer " + c.token;
+  if(json) h["Content-Type"] = "application/json";
+  return h;
+}
+async function ghGet(){
+  const c = ghCfg();
+  const r = await fetch(ghUrl(c, true), {headers: ghHeaders(c), cache: "no-store"});
+  if(r.status === 404) return null;
+  if(r.status === 403 || r.status === 429) throw new Error("GitHub is limiting requests right now. Try again in a few minutes, or add a token in the GitHub settings.");
+  if(!r.ok) throw new Error("GitHub answered with error " + r.status + ".");
+  const j = await r.json();
+  const data = JSON.parse(b64ToUtf8(j.content || ""));
+  if(!Array.isArray(data)) throw new Error("family-tree.json on GitHub is not a family tree file.");
+  return {sha: j.sha, data};
+}
+async function ghPut(sha){
+  const c = ghCfg();
+  if(!c.token) throw new Error("Add your GitHub token in the settings first.");
+  const body = {message: "Update family tree", content: utf8ToB64(JSON.stringify(people, null, 2))};
+  if(sha) body.sha = sha;
+  if(c.branch) body.branch = c.branch;
+  const r = await fetch(ghUrl(c, false), {method:"PUT", headers: ghHeaders(c, true), body: JSON.stringify(body)});
+  if(r.status === 401) throw new Error("GitHub rejected the token (401). Check it is correct and has not expired.");
+  if(r.status === 403 || r.status === 404) throw new Error("GitHub would not allow the save (" + r.status + "). The token needs “Contents: Read and write” access to the " + c.repo + " repository.");
+  if(r.status === 409 || r.status === 422) throw new Error("Someone saved a newer version while you were saving. Press Save again.");
+  if(!r.ok) throw new Error("GitHub answered with error " + r.status + ".");
+  return (await r.json()).content.sha;
+}
+function isDirty(){ try{ return localStorage.getItem(DIRTY) === "1"; }catch(e){ return false; } }
+function updateSync(){
+  const dot = $("gdot"); if(!dot) return;
+  let st = syncState;
+  if(st !== "loading" && st !== "offline") st = isDirty() ? "dirty" : "ok";
+  dot.className = "gdot " + (st === "ok" ? "ok" : st === "dirty" ? "dirty" : st === "offline" ? "bad" : "");
+  $("btnGH").title = st === "ok" ? "Saved: matches GitHub" : st === "dirty" ? "Changes on this PC are not saved to GitHub yet" : st === "loading" ? "Loading from GitHub…" : "Could not reach GitHub";
+}
+function showSync(){
+  const c = ghCfg();
+  body.innerHTML = `<h2 style="margin-top:0;text-align:left">GitHub sync</h2>
+  <p class="ghnote">Saves the whole tree to <b>${esc(c.path)}</b> in your repository, so every PC that opens this page shows the same people. Pages open from GitHub load the latest saved version automatically.</p>
+  <form id="gf">
+    <div class="row"><div><label for="gOwner">GitHub user</label><input id="gOwner" value="${esc(c.owner)}"></div>
+    <div><label for="gRepo">Repository</label><input id="gRepo" value="${esc(c.repo)}"></div></div>
+    <div class="row"><div><label for="gPath">File</label><input id="gPath" value="${esc(c.path)}"></div>
+    <div><label for="gBranch">Branch <span style="font-weight:400">(blank = default)</span></label><input id="gBranch" value="${esc(c.branch)}"></div></div>
+    <label for="gToken">Token <span style="font-weight:400">(needed to save, not to load)</span></label>
+    <input id="gToken" type="password" autocomplete="off" value="${esc(c.token)}" placeholder="github_pat_…">
+    <div class="hint">Create one at github.com/settings/personal-access-tokens/new: choose <b>Only select repositories</b> → ${esc(c.repo)}, then <b>Repository permissions → Contents → Read and write</b>. It is kept only in this browser on this PC; clear the box on shared computers.</div>
+    <p class="ghnote"><b>Privacy:</b> if the repository is public, anyone can read the names and dates saved in ${esc(c.path)}.</p>
+    <div class="ghmsg" id="ghMsg" role="status"></div>
+    <div class="btns"><button type="button" id="gLoad">Load from GitHub</button><button type="button" id="gSave" class="primary">Save to GitHub</button><button type="button" id="gClose">Close</button></div>
+  </form>`;
+  const msg = (t, cls) => { const m = $("ghMsg"); m.textContent = t; m.className = "ghmsg " + (cls || ""); };
+  const store = () => {
+    const v = {owner:$("gOwner").value.trim(), repo:$("gRepo").value.trim(), path:$("gPath").value.trim() || "family-tree.json", branch:$("gBranch").value.trim(), token:$("gToken").value.trim()};
+    try{ localStorage.setItem(GH_KEY, JSON.stringify(v)); }catch(e){}
+    return v;
+  };
+  if(syncState === "offline" && syncNote) msg(syncNote, "err");
+  $("gClose").onclick = () => { store(); dlg.close(); };
+  $("gSave").onclick = async () => {
+    store(); msg("Saving…");
+    try{
+      const latest = await ghGet();
+      if(latest && latest.sha !== loadedSha && JSON.stringify(latest.data) !== JSON.stringify(people)){
+        if(!confirm("GitHub already holds a different version" + (loadedSha ? " (saved from another PC since this page loaded)" : "") + ".\n\nSaving will replace it with this PC's version. Continue?")){ msg("Not saved.", "err"); return; }
+      }
+      const sha = await ghPut(latest ? latest.sha : null);
+      loadedSha = sha; syncState = ""; saveClean(sha);
+      msg("Saved to GitHub at " + new Date().toLocaleTimeString() + ". Other PCs will see it the next time they open the page.", "ok");
+    }catch(e){ msg(e.message, "err"); }
+  };
+  $("gLoad").onclick = async () => {
+    store(); msg("Loading…");
+    try{
+      const r = await ghGet();
+      if(!r){ msg("Nothing has been saved to GitHub yet. Use Save to GitHub first.", "err"); return; }
+      if(isDirty() && JSON.stringify(r.data) !== JSON.stringify(people) && !confirm("This replaces the unsaved changes on this PC with the GitHub version. Continue?")){ msg("Not loaded.", "err"); return; }
+      people = r.data; loadedSha = r.sha; syncState = ""; saveClean(r.sha); await applyNameMatchedPhotos(); focusId = homeId(); render(); fit();
+      msg("Loaded " + people.length + " people from GitHub.", "ok");
+    }catch(e){ syncState = "offline"; updateSync(); msg(e.message, "err"); }
+  };
+  if(!dlg.open) dlg.showModal();
+}
+$("btnGH").onclick = showSync;
 
 /* ============ STARTUP ============ */
 /* family-tree.json in the repository is the master copy.
@@ -855,27 +976,38 @@ function toPeopleArray(data){
   return null;
 }
 async function startFamilyTree(){
-  try{
-    const response = await fetch("./family-tree.json", {cache:"no-store"});
-    if(!response.ok){ console.warn("Could not load family-tree.json:", response.status); }
-    else{
-      const arr = toPeopleArray(await response.json());
-      if(arr && arr.length && arr.every(p => p && p.id)){
-        const h = hashStr(JSON.stringify(arr));
-        let lastBase = null, saved = null;
-        try{ lastBase = localStorage.getItem(BASE_KEY); saved = localStorage.getItem(KEY); }catch(e){}
-        let isSample = true;
-        try{ const st = JSON.parse(saved); isSample = !Array.isArray(st) || st.length === 0 || st.some(p => /^s[1-7]$/.test(String(p.id || "")) || /^Sample /.test(String(p.name || ""))); }catch(e){}
-        if(isSample || lastBase !== h){
-          people = arr; save();
-          try{ localStorage.setItem(BASE_KEY, h); }catch(e){}
-        }
-      } else console.warn("family-tree.json is not a valid list of people.");
-    }
+  let arr = null, sha = null;
+  syncState = "loading"; updateSync();
+  try{                                    // newest copy straight from GitHub (no waiting for the website to rebuild)
+    const r = await ghGet();
+    if(r){ arr = toPeopleArray(r.data); sha = r.sha; }
+    syncState = "";
   }catch(e){
-    console.warn("Could not load family-tree.json. Using saved/sample data.", e);
+    syncState = "offline"; syncNote = e.message; console.warn("GitHub API:", e);
+    try{ const response = await fetch("./family-tree.json", {cache:"no-store"}); if(response.ok) arr = toPeopleArray(await response.json()); }catch(_){}
   }
+  if(arr && arr.length && arr.every(p => p && p.id)){
+    loadedSha = sha;
+    const h = hashStr(JSON.stringify(arr));
+    let lastBase = null, saved = null, st = null, isSample = true;
+    try{ lastBase = localStorage.getItem(BASE_KEY); saved = localStorage.getItem(KEY); }catch(e){}
+    try{ st = JSON.parse(saved); isSample = !Array.isArray(st) || st.length === 0 || st.some(p => /^s[1-7]$/.test(String(p.id || "")) || /^Sample /.test(String(p.name || ""))); }catch(e){}
+    try{   // first run with syncing: does this browser hold edits that GitHub does not have?
+      if(localStorage.getItem(DIRTY) === null && !isSample && Array.isArray(st)){
+        const strip = a => JSON.stringify(a.map(p => Object.assign({}, p, {photo:""})));
+        localStorage.setItem(DIRTY, strip(st) !== strip(arr) ? "1" : "0");
+      }
+    }catch(e){}
+    if(isSample || lastBase !== h){
+      let replace = true;
+      if(!isSample && isDirty() && JSON.stringify(st) !== JSON.stringify(arr)){
+        replace = !confirm("This PC has changes that are not saved to GitHub yet.\n\nOK = keep this PC's version (then open GitHub → Save)\nCancel = replace it with the version from GitHub");
+      }
+      if(replace){ people = arr; saveClean(sha); }
+    }
+  } else console.warn("No saved family tree found on GitHub yet; using this browser's copy.");
   await applyNameMatchedPhotos();
+  updateSync();
   focusId = homeId();
   render();
   fit();
