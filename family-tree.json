@@ -3994,5 +3994,17 @@
     "father": "",
     "mother": "",
     "notes": ""
+  },
+  {
+    "id": "pmwab2li0kmp9",
+    "name": "JUNIOR BOY",
+    "gender": "M",
+    "birth": "",
+    "death": "",
+    "photo": "",
+    "spouse": "",
+    "father": "pmvnzvknsur17",
+    "mother": "pmvnmi3grr9zl",
+    "notes": "DIED"
   }
 ]
