@@ -123,8 +123,23 @@ const KEY = "familyTreeData_v1";
 let people = load();
 let scale = 1, treeW = 0, treeH = 0, panX = 0, panY = 0, focusId = null;
 
+// Make every record safe to draw, whatever the file contained (numbers instead of text, duplicate ids, "Male"/"Female"…).
+function normalizePeople(arr){
+  const S = v => v == null ? "" : String(v).trim();
+  const seen = new Set(), out = [];
+  (Array.isArray(arr) ? arr : []).forEach((p, i) => {
+    if(!p || typeof p !== "object") return;
+    let id = S(p.id) || ("p" + i + Math.random().toString(36).slice(2, 6));
+    while(seen.has(id)) id += "_" + i;
+    seen.add(id);
+    const g = S(p.gender);
+    out.push(Object.assign({}, p, {id, name:S(p.name), gender:/^m/i.test(g) ? "M" : /^f/i.test(g) ? "F" : "",
+      birth:S(p.birth), death:S(p.death), photo:S(p.photo), spouse:S(p.spouse), father:S(p.father), mother:S(p.mother), notes:S(p.notes)}));
+  });
+  return out;
+}
 function load(){
-  try{ const s = localStorage.getItem(KEY); if(s){ const a = JSON.parse(s); if(Array.isArray(a)) return a; } }catch(e){}
+  try{ const s = localStorage.getItem(KEY); if(s){ const a = JSON.parse(s); if(Array.isArray(a)) return normalizePeople(a); } }catch(e){}
   return JSON.parse(JSON.stringify(SAMPLE));
 }
 const DIRTY = "familyTreeDirty", SYNCSHA = "familyTreeSyncSha";
@@ -265,7 +280,9 @@ function layout(){
   const gen = new Map(people.map(p => [p.id, 0]));
   const bump = (id, v) => { if(gen.get(id) < v){ gen.set(id, v); return true; } return false; };
   let changed = true, guard = 0;
-  while(changed && guard++ < 300){
+  let settled = true;
+  while(changed){
+    if(++guard > people.length + 6){ settled = false; break; }
     changed = false;
     people.forEach(c => parentsOf(c).forEach(pid => { if(bump(c.id, gen.get(pid) + 1)) changed = true; }));
     spouseOf.forEach((sid, pid) => {
@@ -285,6 +302,22 @@ function layout(){
       const t = Math.min(...ks.map(k => gen.get(k.id))) - 1;
       grp.forEach(g => { if(bump(g.id, t)) changed = true; });
     });
+  }
+  if(settled){ const v = people.map(p => gen.get(p.id)); if(Math.max(...v) - Math.min(...v) > 25) settled = false; }
+  if(!settled){
+    // The data contains a loop (for example someone entered as their own ancestor) or a very stretched family.
+    // Fall back to plain levels: ancestors on top, each person one row below their deepest parent; loops are ignored.
+    const memo = new Map();
+    const depth = (id, stack) => {
+      if(memo.has(id)) return memo.get(id);
+      if(stack.has(id)) return 0;
+      stack.add(id);
+      let d = 0;
+      const group = [byId(id)]; if(spouseOf.has(id)) group.push(byId(spouseOf.get(id)));   // a couple shares one row
+      group.forEach(q => { if(q) parentsOf(q).forEach(pid => { d = Math.max(d, depth(pid, stack) + 1); }); });
+      stack.delete(id); memo.set(id, d); return d;
+    };
+    people.forEach(p => gen.set(p.id, depth(p.id, new Set())));
   }
   const minGen = Math.min(...people.map(p => gen.get(p.id)));
   const rowY = p => PAD + (gen.get(p.id) - minGen) * (CH + VGAP);
@@ -398,6 +431,21 @@ function layout(){
 
 /* ============ RENDER ============ */
 function render(){
+  try{ drawTree(); }
+  catch(err){
+    console.error(err);
+    const stage = $("stage");
+    stage.querySelectorAll(".card,#empty").forEach(n => n.remove());
+    $("lines").innerHTML = "";
+    const e = document.createElement("div");
+    e.id = "empty"; e.style.position = "absolute"; e.style.width = "620px";
+    e.innerHTML = "<h2 style='font-family:Georgia,serif'>This tree could not be drawn</h2><p>" + esc(err && err.message ? err.message : err) +
+      "</p><p>Use <b>Export</b> to save your data, then check the person records. Pressing <b>Home</b> shows one family at a time.</p>";
+    stage.appendChild(e);
+    treeW = 660; treeH = 300; applyScale();
+  }
+}
+function drawTree(){
   const stage = $("stage");
   stage.querySelectorAll(".card,#empty").forEach(n => n.remove());
   const svg = $("lines");
@@ -452,12 +500,12 @@ function applyScale(){
 }
 function fit(){
   const v = $("viewport"), vw = v.clientWidth, vh = v.clientHeight;
-  scale = Math.max(.2, Math.min(1, (vw - 24) / treeW, (vh - 24) / treeH));
+  scale = Math.max(.05, Math.min(1, (vw - 24) / treeW, (vh - 24) / treeH));
   panX = (vw - treeW * scale) / 2; panY = (vh - treeH * scale) / 2;
   applyScale();
 }
 function zoomAt(f, cx, cy){
-  const ns = Math.min(2.5, Math.max(.2, scale * f));
+  const ns = Math.min(2.5, Math.max(.05, scale * f));
   panX = cx - (cx - panX) * ns / scale; panY = cy - (cy - panY) * ns / scale;
   scale = ns; applyScale();
 }
@@ -801,7 +849,7 @@ $("file").onchange = e => {
       const a = JSON.parse(r.result);
       if(!Array.isArray(a) || a.some(x => !x || !x.id)) throw 0;
       if(!confirm("Replace the current tree with " + a.length + " people from this file?")) return;
-      people = a; save(); focusId = homeId(); render(); fit();
+      people = normalizePeople(a); save(); focusId = homeId(); render(); fit();
     }catch(err){ alert("That file isn't a valid family tree export."); }
   };
   r.readAsText(f); e.target.value = "";
@@ -886,7 +934,7 @@ async function ghGet(){
   if(r.status === 403 || r.status === 429) throw new Error("GitHub is limiting requests right now. Try again in a few minutes, or add a token in the GitHub settings.");
   if(!r.ok) throw new Error("GitHub answered with error " + r.status + ".");
   const j = await r.json();
-  const data = JSON.parse(b64ToUtf8(j.content || ""));
+  const data = normalizePeople(JSON.parse(b64ToUtf8(j.content || "")));
   if(!Array.isArray(data)) throw new Error("family-tree.json on GitHub is not a family tree file.");
   return {sha: j.sha, data};
 }
@@ -984,7 +1032,7 @@ async function startFamilyTree(){
     syncState = "";
   }catch(e){
     syncState = "offline"; syncNote = e.message; console.warn("GitHub API:", e);
-    try{ const response = await fetch("./family-tree.json", {cache:"no-store"}); if(response.ok) arr = toPeopleArray(await response.json()); }catch(_){}
+    try{ const response = await fetch("./family-tree.json", {cache:"no-store"}); if(response.ok) arr = normalizePeople(toPeopleArray(await response.json())); }catch(_){}
   }
   if(arr && arr.length && arr.every(p => p && p.id)){
     loadedSha = sha;
