@@ -426,7 +426,7 @@
     "father": "pmvnngm94ct8b",
     "mother": "pmvnnhst4r5xz",
     "notes": "Died",
-    "deceased": false
+    "deceased": true
   },
   {
     "id": "pmvnnd25a6t0i",
@@ -452,7 +452,7 @@
     "father": "",
     "mother": "",
     "notes": "",
-    "deceased": false
+    "deceased": true
   },
   {
     "id": "pmvnnhst4r5xz",
@@ -465,7 +465,7 @@
     "father": "",
     "mother": "",
     "notes": "DIED",
-    "deceased": false
+    "deceased": true
   },
   {
     "id": "pmvnnje7levfl",
@@ -478,7 +478,7 @@
     "father": "",
     "mother": "",
     "notes": "DIED",
-    "deceased": false
+    "deceased": true
   },
   {
     "id": "pmvnnke85u202",
@@ -491,7 +491,7 @@
     "father": "",
     "mother": "",
     "notes": "",
-    "deceased": false
+    "deceased": true
   },
   {
     "id": "pmvnnlciqaqms",
@@ -517,7 +517,7 @@
     "father": "pmvnnje7levfl",
     "mother": "pmvnnke85u202",
     "notes": "DIED",
-    "deceased": false
+    "deceased": true
   },
   {
     "id": "pmvnnonug5tih",
@@ -543,7 +543,7 @@
     "father": "pmvnnje7levfl",
     "mother": "pmvnnke85u202",
     "notes": "DIED",
-    "deceased": false
+    "deceased": true
   },
   {
     "id": "pmvnnqkea9w57",
@@ -582,7 +582,7 @@
     "father": "pmvnnje7levfl",
     "mother": "pmvnnke85u202",
     "notes": "DIED",
-    "deceased": false
+    "deceased": true
   },
   {
     "id": "pmvnnsmd6phyz",
@@ -4027,7 +4027,7 @@
     "father": "",
     "mother": "",
     "notes": "",
-    "deceased": false
+    "deceased": true
   },
   {
     "id": "pmvx8iftdem0n",
