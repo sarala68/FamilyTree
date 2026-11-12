@@ -9,7 +9,8 @@
     "spouse": "pmvnebmjokkiq",
     "father": "pmvndyk7b3jm2",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvndyk7b3jm2",
@@ -21,7 +22,8 @@
     "spouse": "",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvndzx3vv267",
@@ -33,7 +35,8 @@
     "spouse": "pmvnezr5xgf50",
     "father": "pmvne0opw7ic8",
     "mother": "pmvne1562q697",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvne0opw7ic8",
@@ -45,7 +48,8 @@
     "spouse": "pmvne1562q697",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvne1562q697",
@@ -57,7 +61,8 @@
     "spouse": "pmvne0opw7ic8",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvne1rzjzgdg",
@@ -69,7 +74,8 @@
     "spouse": "pmvnzobsv3mk9",
     "father": "pmvne0opw7ic8",
     "mother": "pmvne1562q697",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvne346k8xbf",
@@ -81,7 +87,8 @@
     "spouse": "pmvne461zp5b0",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvne461zp5b0",
@@ -93,7 +100,8 @@
     "spouse": "pmvne346k8xbf",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvne4yfkfiiu",
@@ -105,7 +113,8 @@
     "spouse": "pmvne66egebkc",
     "father": "pmvne346k8xbf",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvne66egebkc",
@@ -117,7 +126,8 @@
     "spouse": "pmvne4yfkfiiu",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvne7ar4ixff",
@@ -129,7 +139,8 @@
     "spouse": "pmw3ez697vklu",
     "father": "pmvne4yfkfiiu",
     "mother": "pmvne66egebkc",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvne8mzjzvl6",
@@ -141,7 +152,8 @@
     "spouse": "pmw3eybasctml",
     "father": "pmvne4yfkfiiu",
     "mother": "pmvne66egebkc",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnebmjokkiq",
@@ -153,7 +165,8 @@
     "spouse": "pmvndxreu3wnb",
     "father": "pmvne346k8xbf",
     "mother": "pmvne461zp5b0",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnegkvd93tn",
@@ -165,7 +178,8 @@
     "spouse": "",
     "father": "pmvne4yfkfiiu",
     "mother": "pmvne66egebkc",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnehoz7eo4x",
@@ -177,7 +191,8 @@
     "spouse": "",
     "father": "pmvne4yfkfiiu",
     "mother": "pmvne66egebkc",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvnew9ezc87f",
@@ -189,7 +204,8 @@
     "spouse": "pmvnexl409p3q",
     "father": "pmvndxreu3wnb",
     "mother": "pmvnebmjokkiq",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnexl409p3q",
@@ -201,7 +217,8 @@
     "spouse": "pmvnew9ezc87f",
     "father": "pmvnezr5xgf50",
     "mother": "pmvndzx3vv267",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnezr5xgf50",
@@ -213,7 +230,8 @@
     "spouse": "pmvndzx3vv267",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnf9390hrqi",
@@ -225,7 +243,8 @@
     "spouse": "pmvnyqxrp20j5",
     "father": "pmvndxreu3wnb",
     "mother": "pmvnebmjokkiq",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnfagchx1ns",
@@ -237,7 +256,8 @@
     "spouse": "pmvoy1yqf89vl",
     "father": "pmvndxreu3wnb",
     "mother": "pmvnebmjokkiq",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnfazwfsr4j",
@@ -249,7 +269,8 @@
     "spouse": "pmvtofai4dmfy",
     "father": "pmvndxreu3wnb",
     "mother": "pmvnebmjokkiq",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnfc9imwto5",
@@ -261,7 +282,8 @@
     "spouse": "pmvtos1bzjtnz",
     "father": "pmvndxreu3wnb",
     "mother": "pmvnebmjokkiq",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnfcym85ehj",
@@ -273,7 +295,8 @@
     "spouse": "pmvoy4hrwzird",
     "father": "pmvndxreu3wnb",
     "mother": "pmvnebmjokkiq",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnmdgbrtq0j",
@@ -285,7 +308,8 @@
     "spouse": "pmvnmfwvigmmo",
     "father": "pmvnew9ezc87f",
     "mother": "pmvnexl409p3q",
-    "notes": "Born in Singapore"
+    "notes": "Born in Singapore",
+    "deceased": false
   },
   {
     "id": "pmvnmfwvigmmo",
@@ -297,7 +321,8 @@
     "spouse": "pmvnmdgbrtq0j",
     "father": "pmvo17bunwcv6",
     "mother": "pmvo19g91qfwn",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnmgupv002t",
@@ -309,7 +334,8 @@
     "spouse": "",
     "father": "pmvnew9ezc87f",
     "mother": "pmvnexl409p3q",
-    "notes": "Born in Singapore"
+    "notes": "Born in Singapore",
+    "deceased": false
   },
   {
     "id": "pmvnmhjgmahq5",
@@ -321,7 +347,8 @@
     "spouse": "pmvnmx2sat537",
     "father": "pmvnew9ezc87f",
     "mother": "pmvnexl409p3q",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnmi3grr9zl",
@@ -333,7 +360,8 @@
     "spouse": "pmvnzvknsur17",
     "father": "pmvnew9ezc87f",
     "mother": "pmvnexl409p3q",
-    "notes": "DIVORCE"
+    "notes": "DIVORCE",
+    "deceased": false
   },
   {
     "id": "pmvnmrvg1u0sg",
@@ -345,7 +373,8 @@
     "spouse": "",
     "father": "pmvnmdgbrtq0j",
     "mother": "pmvnmfwvigmmo",
-    "notes": "Born in Petaling Jaya"
+    "notes": "Born in Petaling Jaya",
+    "deceased": false
   },
   {
     "id": "pmvnmx2sat537",
@@ -357,7 +386,8 @@
     "spouse": "pmvnmhjgmahq5",
     "father": "pmvnnbgeenvae",
     "mother": "pmvnnd25a6t0i",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnn7jw2pg7t",
@@ -369,7 +399,8 @@
     "spouse": "",
     "father": "pmvnmx2sat537",
     "mother": "pmvnmhjgmahq5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnn8v2pekjm",
@@ -381,7 +412,8 @@
     "spouse": "",
     "father": "pmvnmx2sat537",
     "mother": "pmvnmhjgmahq5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnnbgeenvae",
@@ -393,7 +425,8 @@
     "spouse": "pmvnnd25a6t0i",
     "father": "pmvnngm94ct8b",
     "mother": "pmvnnhst4r5xz",
-    "notes": "Died"
+    "notes": "Died",
+    "deceased": false
   },
   {
     "id": "pmvnnd25a6t0i",
@@ -405,7 +438,8 @@
     "spouse": "pmvnnbgeenvae",
     "father": "pmvnnje7levfl",
     "mother": "pmvnnke85u202",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnngm94ct8b",
@@ -417,7 +451,8 @@
     "spouse": "pmvnnhst4r5xz",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnnhst4r5xz",
@@ -429,7 +464,8 @@
     "spouse": "pmvnngm94ct8b",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvnnje7levfl",
@@ -441,7 +477,8 @@
     "spouse": "pmvnnke85u202",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvnnke85u202",
@@ -453,7 +490,8 @@
     "spouse": "pmvnnje7levfl",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnnlciqaqms",
@@ -465,7 +503,8 @@
     "spouse": "",
     "father": "pmvnnje7levfl",
     "mother": "pmvnnke85u202",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnnmftwutld",
@@ -477,7 +516,8 @@
     "spouse": "",
     "father": "pmvnnje7levfl",
     "mother": "pmvnnke85u202",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvnnonug5tih",
@@ -489,7 +529,8 @@
     "spouse": "",
     "father": "pmvnnje7levfl",
     "mother": "pmvnnke85u202",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnnpklim7o1",
@@ -501,7 +542,8 @@
     "spouse": "",
     "father": "pmvnnje7levfl",
     "mother": "pmvnnke85u202",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvnnqkea9w57",
@@ -513,7 +555,8 @@
     "spouse": "",
     "father": "pmvnnje7levfl",
     "mother": "pmvnnke85u202",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvnnrgu1scff",
@@ -525,7 +568,8 @@
     "spouse": "",
     "father": "pmvnnje7levfl",
     "mother": "pmvnnke85u202",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnnryiv95az",
@@ -537,7 +581,8 @@
     "spouse": "",
     "father": "pmvnnje7levfl",
     "mother": "pmvnnke85u202",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvnnsmd6phyz",
@@ -549,7 +594,8 @@
     "spouse": "",
     "father": "pmvnnje7levfl",
     "mother": "pmvnnke85u202",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnyqxrp20j5",
@@ -561,7 +607,8 @@
     "spouse": "pmvnf9390hrqi",
     "father": "pmw7b20i30b68",
     "mother": "pmw7b2jihmcb5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnyrs90dcfw",
@@ -573,7 +620,8 @@
     "spouse": "pmvnz1a7k0ru3",
     "father": "pmvnf9390hrqi",
     "mother": "pmvnyqxrp20j5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnyuwm6maeb",
@@ -585,7 +633,8 @@
     "spouse": "pmvnyxk7tmttd",
     "father": "pmvnf9390hrqi",
     "mother": "pmvnyqxrp20j5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnyvq8mwmrp",
@@ -597,7 +646,8 @@
     "spouse": "pmvnz2pkzizba",
     "father": "pmvnf9390hrqi",
     "mother": "pmvnyqxrp20j5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnyw3nq4hsw",
@@ -609,7 +659,8 @@
     "spouse": "pmw7atsnb1i3g",
     "father": "pmvnf9390hrqi",
     "mother": "pmvnyqxrp20j5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnyxk7tmttd",
@@ -621,7 +672,8 @@
     "spouse": "pmvnyuwm6maeb",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnyyhvrirkx",
@@ -633,7 +685,8 @@
     "spouse": "",
     "father": "pmvnyxk7tmttd",
     "mother": "pmvnyuwm6maeb",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnyzb7rcztb",
@@ -645,7 +698,8 @@
     "spouse": "",
     "father": "pmvnyxk7tmttd",
     "mother": "pmvnyuwm6maeb",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnz01eorfbt",
@@ -657,7 +711,8 @@
     "spouse": "",
     "father": "pmvnyrs90dcfw",
     "mother": "pmvnz1a7k0ru3",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnz1a7k0ru3",
@@ -669,7 +724,8 @@
     "spouse": "pmvnyrs90dcfw",
     "father": "pmvoyzuayrq7o",
     "mother": "pmvoz1ivcelod",
-    "notes": "DIVORCE"
+    "notes": "DIVORCE",
+    "deceased": false
   },
   {
     "id": "pmvnz2pkzizba",
@@ -681,7 +737,8 @@
     "spouse": "pmvnyvq8mwmrp",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnz3yaryfms",
@@ -693,7 +750,8 @@
     "spouse": "",
     "father": "pmvnyvq8mwmrp",
     "mother": "pmvnz2pkzizba",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnzhcoa5t20",
@@ -705,7 +763,8 @@
     "spouse": "",
     "father": "",
     "mother": "pmvnmi3grr9zl",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnzobsv3mk9",
@@ -717,7 +776,8 @@
     "spouse": "pmvne1rzjzgdg",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnzrrnglodw",
@@ -729,7 +789,8 @@
     "spouse": "pmvo0aum2lfdi",
     "father": "pmvnzobsv3mk9",
     "mother": "pmvne1rzjzgdg",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnztgbmd65l",
@@ -741,7 +802,8 @@
     "spouse": "pmvo0e05v7wlx",
     "father": "pmvnzobsv3mk9",
     "mother": "pmvne1rzjzgdg",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnzue0f0lqf",
@@ -753,7 +815,8 @@
     "spouse": "pmvo0fl6k6pkx",
     "father": "pmvnzobsv3mk9",
     "mother": "pmvne1rzjzgdg",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnzvknsur17",
@@ -765,7 +828,8 @@
     "spouse": "pmvnmi3grr9zl",
     "father": "pmvnzobsv3mk9",
     "mother": "pmvne1rzjzgdg",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnzyljhd7ex",
@@ -777,7 +841,8 @@
     "spouse": "pmvo0nh1kz8ti",
     "father": "pmvnzobsv3mk9",
     "mother": "pmvne1rzjzgdg",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvnzzg3w867p",
@@ -789,7 +854,8 @@
     "spouse": "",
     "father": "pmvnzobsv3mk9",
     "mother": "pmvne1rzjzgdg",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo005xqsbp8",
@@ -801,7 +867,8 @@
     "spouse": "pmvo0qy2367rd",
     "father": "pmvnzobsv3mk9",
     "mother": "pmvne1rzjzgdg",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo01ok8qrby",
@@ -813,7 +880,8 @@
     "spouse": "",
     "father": "pmvnzobsv3mk9",
     "mother": "pmvne1rzjzgdg",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo02j93vm6b",
@@ -825,7 +893,8 @@
     "spouse": "pmvo0sk7fhvjm",
     "father": "pmvnzobsv3mk9",
     "mother": "pmvne1rzjzgdg",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo053rovg29",
@@ -837,7 +906,8 @@
     "spouse": "pmvo0um0yd3uc",
     "father": "pmvnzobsv3mk9",
     "mother": "pmvne1rzjzgdg",
-    "notes": "1st WIFE SARASWATHY - DIED"
+    "notes": "1st WIFE SARASWATHY - DIED",
+    "deceased": false
   },
   {
     "id": "pmvo05xo3oww3",
@@ -849,7 +919,8 @@
     "spouse": "pmvo0xw9dh46f",
     "father": "pmvnzobsv3mk9",
     "mother": "pmvne1rzjzgdg",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo07m8qj3x2",
@@ -861,7 +932,8 @@
     "spouse": "pmvo12btmxcku",
     "father": "pmvnzobsv3mk9",
     "mother": "pmvne1rzjzgdg",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo0aum2lfdi",
@@ -873,7 +945,8 @@
     "spouse": "pmvnzrrnglodw",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo0c0k3z9i8",
@@ -885,7 +958,8 @@
     "spouse": "",
     "father": "pmvnzrrnglodw",
     "mother": "pmvo0aum2lfdi",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo0d5ukpezq",
@@ -897,7 +971,8 @@
     "spouse": "",
     "father": "pmvnzrrnglodw",
     "mother": "pmvo0aum2lfdi",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo0e05v7wlx",
@@ -909,7 +984,8 @@
     "spouse": "pmvnztgbmd65l",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo0fl6k6pkx",
@@ -921,7 +997,8 @@
     "spouse": "pmvnzue0f0lqf",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo0nh1kz8ti",
@@ -933,7 +1010,8 @@
     "spouse": "pmvnzyljhd7ex",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo0otmdmt2p",
@@ -945,7 +1023,8 @@
     "spouse": "",
     "father": "pmvo0nh1kz8ti",
     "mother": "pmvnzyljhd7ex",
-    "notes": "Kindergarden Teacher"
+    "notes": "Kindergarden Teacher",
+    "deceased": false
   },
   {
     "id": "pmvo0ptp5yoys",
@@ -957,7 +1036,8 @@
     "spouse": "",
     "father": "pmvo0nh1kz8ti",
     "mother": "pmvnzyljhd7ex",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo0qy2367rd",
@@ -969,7 +1049,8 @@
     "spouse": "pmvo005xqsbp8",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo0sk7fhvjm",
@@ -981,7 +1062,8 @@
     "spouse": "pmvo02j93vm6b",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo0tgy90zj5",
@@ -993,7 +1075,8 @@
     "spouse": "",
     "father": "pmvo02j93vm6b",
     "mother": "pmvo0sk7fhvjm",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo0um0yd3uc",
@@ -1005,7 +1088,8 @@
     "spouse": "pmvo053rovg29",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo0xw9dh46f",
@@ -1017,7 +1101,8 @@
     "spouse": "pmvo05xo3oww3",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo10du834pf",
@@ -1029,7 +1114,8 @@
     "spouse": "",
     "father": "pmvo05xo3oww3",
     "mother": "pmvo0xw9dh46f",
-    "notes": "UMA'S DAUGHTER"
+    "notes": "UMA'S DAUGHTER",
+    "deceased": false
   },
   {
     "id": "pmvo12btmxcku",
@@ -1041,7 +1127,8 @@
     "spouse": "pmvo07m8qj3x2",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo17bunwcv6",
@@ -1053,7 +1140,8 @@
     "spouse": "pmvo19g91qfwn",
     "father": "pmvonhnjg1xqd",
     "mother": "pmvonil2pgpbp",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo19g91qfwn",
@@ -1065,7 +1153,8 @@
     "spouse": "pmvo17bunwcv6",
     "father": "pmvo1ils0my51",
     "mother": "pmvo1o35nb4uf",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo1btcn4ctx",
@@ -1077,7 +1166,8 @@
     "spouse": "pmvo1gwwapajv",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvo1gwwapajv",
@@ -1089,7 +1179,8 @@
     "spouse": "pmvo1btcn4ctx",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvo1ils0my51",
@@ -1101,7 +1192,8 @@
     "spouse": "pmvo1o35nb4uf",
     "father": "pmvo1btcn4ctx",
     "mother": "pmvo1gwwapajv",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvo1m56a7pvv",
@@ -1113,7 +1205,8 @@
     "spouse": "pmvo1n38nxomc",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvo1n38nxomc",
@@ -1125,7 +1218,8 @@
     "spouse": "pmvo1m56a7pvv",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvo1o35nb4uf",
@@ -1137,7 +1231,8 @@
     "spouse": "pmvo1ils0my51",
     "father": "pmvo1m56a7pvv",
     "mother": "pmvo1n38nxomc",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvonhnjg1xqd",
@@ -1149,7 +1244,8 @@
     "spouse": "pmvonil2pgpbp",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvonil2pgpbp",
@@ -1161,7 +1257,8 @@
     "spouse": "pmvonhnjg1xqd",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvonkojj4sa3",
@@ -1173,7 +1270,8 @@
     "spouse": "pmvonmimyb2y4",
     "father": "pmvonhnjg1xqd",
     "mother": "pmvonil2pgpbp",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvonmimyb2y4",
@@ -1185,7 +1283,8 @@
     "spouse": "pmvonkojj4sa3",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvono1s4qrgj",
@@ -1197,7 +1296,8 @@
     "spouse": "pmvonox2zsj3c",
     "father": "pmvonmimyb2y4",
     "mother": "pmvonkojj4sa3",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvonox2zsj3c",
@@ -1209,7 +1309,8 @@
     "spouse": "pmvono1s4qrgj",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvonqf5xtw58",
@@ -1221,7 +1322,8 @@
     "spouse": "",
     "father": "pmvonox2zsj3c",
     "mother": "pmvono1s4qrgj",
-    "notes": "ADOPTED"
+    "notes": "ADOPTED",
+    "deceased": false
   },
   {
     "id": "pmvonxvs1xqbv",
@@ -1233,7 +1335,8 @@
     "spouse": "",
     "father": "pmvonhnjg1xqd",
     "mother": "pmvonil2pgpbp",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvonzswibpii",
@@ -1245,7 +1348,8 @@
     "spouse": "",
     "father": "pmvonhnjg1xqd",
     "mother": "pmvonil2pgpbp",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvoo0mlfgx8f",
@@ -1257,7 +1361,8 @@
     "spouse": "",
     "father": "pmvonhnjg1xqd",
     "mother": "pmvonil2pgpbp",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvoo2x9hkgc6",
@@ -1265,11 +1370,12 @@
     "gender": "M",
     "birth": "",
     "death": "",
-    "photo": "",
+    "photo": "PICTURE/ROBERT HADRIN.jpeg",
     "spouse": "pmvot7oh9cy0j",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoonr4ugk5p",
@@ -1281,7 +1387,8 @@
     "spouse": "",
     "father": "pmvnmdgbrtq0j",
     "mother": "pmvnmfwvigmmo",
-    "notes": "Born in Petaling Jaya"
+    "notes": "Born in Petaling Jaya",
+    "deceased": false
   },
   {
     "id": "pmvot7oh9cy0j",
@@ -1293,7 +1400,8 @@
     "spouse": "pmvoo2x9hkgc6",
     "father": "pmvo17bunwcv6",
     "mother": "pmvo19g91qfwn",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvot913nllau",
@@ -1305,7 +1413,8 @@
     "spouse": "",
     "father": "pmvo17bunwcv6",
     "mother": "pmvo19g91qfwn",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvotqmedax0j",
@@ -1317,7 +1426,8 @@
     "spouse": "pmvotrww3n22z",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvotrww3n22z",
@@ -1329,7 +1439,8 @@
     "spouse": "pmvotqmedax0j",
     "father": "pmvo1ils0my51",
     "mother": "pmvo1o35nb4uf",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvottt726y2h",
@@ -1341,7 +1452,8 @@
     "spouse": "",
     "father": "pmvotrww3n22z",
     "mother": "pmvotqmedax0j",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvotuvfdxh65",
@@ -1353,7 +1465,8 @@
     "spouse": "pmvwozko0hwmu",
     "father": "pmvotrww3n22z",
     "mother": "pmvotqmedax0j",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvotvtiez1sy",
@@ -1365,7 +1478,8 @@
     "spouse": "",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvotww21209x",
@@ -1377,7 +1491,8 @@
     "spouse": "",
     "father": "pmvotrww3n22z",
     "mother": "pmvotqmedax0j",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoty0dfgat5",
@@ -1389,7 +1504,8 @@
     "spouse": "",
     "father": "pmvotww21209x",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvotz6ujx5ut",
@@ -1401,7 +1517,8 @@
     "spouse": "",
     "father": "pmvotww21209x",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvotzj3w4tfm",
@@ -1413,7 +1530,8 @@
     "spouse": "",
     "father": "pmvotww21209x",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvou11hr2xvb",
@@ -1425,7 +1543,8 @@
     "spouse": "",
     "father": "pmvo1ils0my51",
     "mother": "pmvo1o35nb4uf",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvou2g97ay93",
@@ -1437,7 +1556,8 @@
     "spouse": "pmvou3ubqf8au",
     "father": "pmvo1ils0my51",
     "mother": "pmvo1o35nb4uf",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvou3ubqf8au",
@@ -1449,7 +1569,8 @@
     "spouse": "pmvou2g97ay93",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvou5166crck",
@@ -1461,7 +1582,8 @@
     "spouse": "pmvou6mxrrwrm",
     "father": "pmvo1ils0my51",
     "mother": "pmvo1o35nb4uf",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvou6mxrrwrm",
@@ -1473,7 +1595,8 @@
     "spouse": "pmvou5166crck",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvou88o7t2ao",
@@ -1485,7 +1608,8 @@
     "spouse": "pmvx8iftdem0n",
     "father": "pmvo1ils0my51",
     "mother": "pmvo1o35nb4uf",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvouax4qevms",
@@ -1497,7 +1621,8 @@
     "spouse": "",
     "father": "pmvotvtiez1sy",
     "mother": "pmvotuvfdxh65",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvouckvlr61l",
@@ -1509,7 +1634,8 @@
     "spouse": "",
     "father": "pmvotvtiez1sy",
     "mother": "pmvotuvfdxh65",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvouh6bykdd0",
@@ -1521,7 +1647,8 @@
     "spouse": "",
     "father": "pmvo1m56a7pvv",
     "mother": "pmvo1n38nxomc",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvouijnvqmi6",
@@ -1533,7 +1660,8 @@
     "spouse": "pmvouo6lvl3ha",
     "father": "pmvo1m56a7pvv",
     "mother": "pmvo1n38nxomc",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvoujqij3dwc",
@@ -1545,7 +1673,8 @@
     "spouse": "pmvov7940d22m",
     "father": "pmvo1m56a7pvv",
     "mother": "pmvo1n38nxomc",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvouki9wlnu1",
@@ -1557,7 +1686,8 @@
     "spouse": "",
     "father": "pmvo1m56a7pvv",
     "mother": "pmvo1n38nxomc",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvouljz3vd2u",
@@ -1569,7 +1699,8 @@
     "spouse": "pmvovgi200jm9",
     "father": "pmvo1m56a7pvv",
     "mother": "pmvo1n38nxomc",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvoum1qddh6b",
@@ -1581,7 +1712,8 @@
     "spouse": "pmvov4inaquow",
     "father": "pmvo1m56a7pvv",
     "mother": "pmvo1n38nxomc",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvoumqvrejh3",
@@ -1593,7 +1725,8 @@
     "spouse": "pmvov9p4geida",
     "father": "pmvo1m56a7pvv",
     "mother": "pmvo1n38nxomc",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvouo6lvl3ha",
@@ -1605,7 +1738,8 @@
     "spouse": "pmvouijnvqmi6",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvouqgm58u4l",
@@ -1617,7 +1751,8 @@
     "spouse": "",
     "father": "pmvouo6lvl3ha",
     "mother": "pmvouijnvqmi6",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvout40olmqa",
@@ -1629,7 +1764,8 @@
     "spouse": "pmvov0g4vtgc9",
     "father": "pmvouo6lvl3ha",
     "mother": "pmvouijnvqmi6",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvouz4q9zj4n",
@@ -1641,7 +1777,8 @@
     "spouse": "",
     "father": "",
     "mother": "pmvouqgm58u4l",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvov0g4vtgc9",
@@ -1653,7 +1790,8 @@
     "spouse": "pmvout40olmqa",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvov4inaquow",
@@ -1665,7 +1803,8 @@
     "spouse": "pmvoum1qddh6b",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvov7940d22m",
@@ -1677,7 +1816,8 @@
     "spouse": "pmvoujqij3dwc",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvov9p4geida",
@@ -1689,7 +1829,8 @@
     "spouse": "pmvoumqvrejh3",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvovbofz27gk",
@@ -1701,7 +1842,8 @@
     "spouse": "",
     "father": "pmvoumqvrejh3",
     "mother": "pmvov9p4geida",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovcmk5vp4w",
@@ -1713,7 +1855,8 @@
     "spouse": "pmvovdazjjdse",
     "father": "pmvoumqvrejh3",
     "mother": "pmvov9p4geida",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovdazjjdse",
@@ -1725,7 +1868,8 @@
     "spouse": "pmvovcmk5vp4w",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovgi200jm9",
@@ -1737,7 +1881,8 @@
     "spouse": "pmvouljz3vd2u",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvovi4u7859c",
@@ -1749,7 +1894,8 @@
     "spouse": "pmvovlp75ql0s",
     "father": "pmvovgi200jm9",
     "mother": "pmvouljz3vd2u",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovj617jv0x",
@@ -1761,7 +1907,8 @@
     "spouse": "pmvovn2u5vue5",
     "father": "pmvovgi200jm9",
     "mother": "pmvouljz3vd2u",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovk3khpte1",
@@ -1773,7 +1920,8 @@
     "spouse": "pmvovp4adztz8",
     "father": "pmvovgi200jm9",
     "mother": "pmvouljz3vd2u",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovkor9jgot",
@@ -1785,7 +1933,8 @@
     "spouse": "pmvovq5vc3y5e",
     "father": "pmvovgi200jm9",
     "mother": "pmvouljz3vd2u",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovlp75ql0s",
@@ -1797,7 +1946,8 @@
     "spouse": "pmvovi4u7859c",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovn2u5vue5",
@@ -1809,7 +1959,8 @@
     "spouse": "pmvovj617jv0x",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovp4adztz8",
@@ -1821,7 +1972,8 @@
     "spouse": "pmvovk3khpte1",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovq5vc3y5e",
@@ -1833,7 +1985,8 @@
     "spouse": "pmvovkor9jgot",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovr22mgzpo",
@@ -1845,7 +1998,8 @@
     "spouse": "",
     "father": "pmvovi4u7859c",
     "mother": "pmvovlp75ql0s",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovs9ydnpf2",
@@ -1857,7 +2011,8 @@
     "spouse": "",
     "father": "pmvovj617jv0x",
     "mother": "pmvovn2u5vue5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovttjzwqs2",
@@ -1869,7 +2024,8 @@
     "spouse": "pmvovvfdb7iwg",
     "father": "pmvovkor9jgot",
     "mother": "pmvovq5vc3y5e",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovvfdb7iwg",
@@ -1881,7 +2037,8 @@
     "spouse": "pmvovttjzwqs2",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovw47l3f76",
@@ -1893,7 +2050,8 @@
     "spouse": "",
     "father": "pmvovttjzwqs2",
     "mother": "pmvovvfdb7iwg",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovy8j375f6",
@@ -1905,7 +2063,8 @@
     "spouse": "",
     "father": "pmvovk3khpte1",
     "mother": "pmvovp4adztz8",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvovz858pknh",
@@ -1917,7 +2076,8 @@
     "spouse": "",
     "father": "pmvovk3khpte1",
     "mother": "pmvovp4adztz8",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoy1yqf89vl",
@@ -1929,7 +2089,8 @@
     "spouse": "pmvnfagchx1ns",
     "father": "pmvoy4hrwzird",
     "mother": "pmvnfcym85ehj",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoy4hrwzird",
@@ -1941,7 +2102,8 @@
     "spouse": "pmvnfcym85ehj",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvoy9im1p921",
@@ -1953,7 +2115,8 @@
     "spouse": "pmvoyaj9p8nvo",
     "father": "pmvnfagchx1ns",
     "mother": "pmvoy1yqf89vl",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoyaj9p8nvo",
@@ -1965,7 +2128,8 @@
     "spouse": "pmvoy9im1p921",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoybuw3ba4w",
@@ -1977,7 +2141,8 @@
     "spouse": "",
     "father": "pmvoy9im1p921",
     "mother": "pmvoyaj9p8nvo",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoycqzdlq6i",
@@ -1989,7 +2154,8 @@
     "spouse": "",
     "father": "pmvoy9im1p921",
     "mother": "pmvoyaj9p8nvo",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoyevsnagi5",
@@ -2001,7 +2167,8 @@
     "spouse": "pmvoyiln1a1z9",
     "father": "pmvnfagchx1ns",
     "mother": "pmvoy1yqf89vl",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoyfqxh7l3z",
@@ -2013,7 +2180,8 @@
     "spouse": "pmvoyvd0v0jrd",
     "father": "pmvnfagchx1ns",
     "mother": "pmvoy1yqf89vl",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoygl4dqwg7",
@@ -2025,7 +2193,8 @@
     "spouse": "pmvuf6qtbhmtz",
     "father": "pmvnfagchx1ns",
     "mother": "pmvoy1yqf89vl",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoyhlb5wud8",
@@ -2037,7 +2206,8 @@
     "spouse": "pmvudc2ol1w7v",
     "father": "pmvnfagchx1ns",
     "mother": "pmvoy1yqf89vl",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoyiln1a1z9",
@@ -2049,7 +2219,8 @@
     "spouse": "pmvoyevsnagi5",
     "father": "pmvoynw57ka1v",
     "mother": "pmvoyosjl2c1a",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoyk0vkvama",
@@ -2061,7 +2232,8 @@
     "spouse": "",
     "father": "pmvoyevsnagi5",
     "mother": "pmvoyiln1a1z9",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoykvrbprs3",
@@ -2073,7 +2245,8 @@
     "spouse": "",
     "father": "pmvoyevsnagi5",
     "mother": "pmvoyiln1a1z9",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoylp4w0h6b",
@@ -2085,7 +2258,8 @@
     "spouse": "",
     "father": "pmvoyevsnagi5",
     "mother": "pmvoyiln1a1z9",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoymhxbr99g",
@@ -2097,7 +2271,8 @@
     "spouse": "",
     "father": "pmvoyevsnagi5",
     "mother": "pmvoyiln1a1z9",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoynw57ka1v",
@@ -2109,7 +2284,8 @@
     "spouse": "pmvoyosjl2c1a",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoyosjl2c1a",
@@ -2121,7 +2297,8 @@
     "spouse": "pmvoynw57ka1v",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoyr3tvnifk",
@@ -2133,7 +2310,8 @@
     "spouse": "pmvoysry2kf7d",
     "father": "pmvoynw57ka1v",
     "mother": "pmvoyosjl2c1a",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoyrxt7r61k",
@@ -2145,7 +2323,8 @@
     "spouse": "",
     "father": "pmvoynw57ka1v",
     "mother": "pmvoyosjl2c1a",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoysry2kf7d",
@@ -2157,7 +2336,8 @@
     "spouse": "pmvoyr3tvnifk",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoyvd0v0jrd",
@@ -2169,7 +2349,8 @@
     "spouse": "pmvoyfqxh7l3z",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoyw44wdbuc",
@@ -2181,7 +2362,8 @@
     "spouse": "",
     "father": "pmvoyfqxh7l3z",
     "mother": "pmvoyvd0v0jrd",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoyxhcp1hkt",
@@ -2193,7 +2375,8 @@
     "spouse": "",
     "father": "pmvoyfqxh7l3z",
     "mother": "pmvoyvd0v0jrd",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoyzuayrq7o",
@@ -2205,7 +2388,8 @@
     "spouse": "pmvoz1ivcelod",
     "father": "pmvoy4hrwzird",
     "mother": "pmvnfcym85ehj",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoz1ivcelod",
@@ -2217,7 +2401,8 @@
     "spouse": "pmvoyzuayrq7o",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoz2lkrcsig",
@@ -2229,7 +2414,8 @@
     "spouse": "pmvoz44s6knvg",
     "father": "pmvoy4hrwzird",
     "mother": "pmvnfcym85ehj",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoz44s6knvg",
@@ -2241,7 +2427,8 @@
     "spouse": "pmvoz2lkrcsig",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvoz4z50fvhx",
@@ -2253,7 +2440,8 @@
     "spouse": "pmvuxk6xcvb91",
     "father": "pmvoy4hrwzird",
     "mother": "pmvnfcym85ehj",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvoz5s0k8ezi",
@@ -2265,7 +2453,8 @@
     "spouse": "pmvuxj9num0jy",
     "father": "pmvoy4hrwzird",
     "mother": "pmvnfcym85ehj",
-    "notes": "ADOPTED"
+    "notes": "ADOPTED",
+    "deceased": false
   },
   {
     "id": "pmvoz74cawm4f",
@@ -2277,7 +2466,8 @@
     "spouse": "pmvud9ve1z6c9",
     "father": "pmvoy4hrwzird",
     "mother": "pmvnfcym85ehj",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvoz84qltsio",
@@ -2289,7 +2479,8 @@
     "spouse": "pmvozh39w5d95",
     "father": "pmvoy4hrwzird",
     "mother": "pmvnfcym85ehj",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvozdkop3me6",
@@ -2301,7 +2492,8 @@
     "spouse": "",
     "father": "pmvoy4hrwzird",
     "mother": "pmvnfcym85ehj",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvozeyban8zw",
@@ -2313,7 +2505,8 @@
     "spouse": "",
     "father": "pmvoy4hrwzird",
     "mother": "pmvnfcym85ehj",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvozg1kwl60t",
@@ -2325,7 +2518,8 @@
     "spouse": "",
     "father": "pmvozeyban8zw",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvozh39w5d95",
@@ -2337,7 +2531,8 @@
     "spouse": "pmvoz84qltsio",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvozi5tbpx98",
@@ -2349,7 +2544,8 @@
     "spouse": "pmvozkljpa609",
     "father": "pmvozh39w5d95",
     "mother": "pmvoz84qltsio",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvozj4xeogk4",
@@ -2361,7 +2557,8 @@
     "spouse": "pmvozl9c04o38",
     "father": "pmvozh39w5d95",
     "mother": "pmvoz84qltsio",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvozjmqgn4bt",
@@ -2373,7 +2570,8 @@
     "spouse": "pmvozluukuv0m",
     "father": "pmvozh39w5d95",
     "mother": "pmvoz84qltsio",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvozkljpa609",
@@ -2385,7 +2583,8 @@
     "spouse": "pmvozi5tbpx98",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvozl9c04o38",
@@ -2393,11 +2592,12 @@
     "gender": "M",
     "birth": "",
     "death": "",
-    "photo": "",
+    "photo": "PICTURE/VINOD.jpeg",
     "spouse": "pmvozj4xeogk4",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvozluukuv0m",
@@ -2409,7 +2609,8 @@
     "spouse": "pmvozjmqgn4bt",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvpa2ftprklk",
@@ -2421,7 +2622,8 @@
     "spouse": "pmvpa4k7elxip",
     "father": "pmvnnbgeenvae",
     "mother": "pmvnnd25a6t0i",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvpa3evlmms0",
@@ -2433,7 +2635,8 @@
     "spouse": "pmvpa7vt42lqa",
     "father": "pmvnnbgeenvae",
     "mother": "pmvnnd25a6t0i",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvpa4k7elxip",
@@ -2445,7 +2648,8 @@
     "spouse": "pmvpa2ftprklk",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvpa5m3xdhl1",
@@ -2457,7 +2661,8 @@
     "spouse": "",
     "father": "pmvpa4k7elxip",
     "mother": "pmvpa2ftprklk",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvpa61p1xrli",
@@ -2469,7 +2674,8 @@
     "spouse": "",
     "father": "pmvpa4k7elxip",
     "mother": "pmvpa2ftprklk",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvpa72cga5vg",
@@ -2481,7 +2687,8 @@
     "spouse": "",
     "father": "pmvpa4k7elxip",
     "mother": "pmvpa2ftprklk",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvpa7vt42lqa",
@@ -2493,7 +2700,8 @@
     "spouse": "pmvpa3evlmms0",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvto4pvz5xp6",
@@ -2505,7 +2713,8 @@
     "spouse": "",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvto5zxqfjxq",
@@ -2517,7 +2726,8 @@
     "spouse": "pmvto7stevhee",
     "father": "pmvto4pvz5xp6",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvto7stevhee",
@@ -2529,7 +2739,8 @@
     "spouse": "pmvto5zxqfjxq",
     "father": "pmvtoc2y41o91",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvtoc2y41o91",
@@ -2541,7 +2752,8 @@
     "spouse": "",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvtoeg2tyd0z",
@@ -2553,7 +2765,8 @@
     "spouse": "",
     "father": "pmvtoc2y41o91",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvtofai4dmfy",
@@ -2565,7 +2778,8 @@
     "spouse": "pmvnfazwfsr4j",
     "father": "pmvto7stevhee",
     "mother": "pmvto5zxqfjxq",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvtogiekxqlz",
@@ -2577,7 +2791,8 @@
     "spouse": "",
     "father": "pmvto7stevhee",
     "mother": "pmvto5zxqfjxq",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvtogwjhyhdo",
@@ -2589,7 +2804,8 @@
     "spouse": "",
     "father": "pmvto7stevhee",
     "mother": "pmvto5zxqfjxq",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvtohcx0l1vx",
@@ -2601,7 +2817,8 @@
     "spouse": "",
     "father": "pmvto7stevhee",
     "mother": "pmvto5zxqfjxq",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvtoi5esvesb",
@@ -2613,7 +2830,8 @@
     "spouse": "",
     "father": "pmvto7stevhee",
     "mother": "pmvto5zxqfjxq",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvtoilor1hja",
@@ -2625,7 +2843,8 @@
     "spouse": "",
     "father": "pmvto7stevhee",
     "mother": "pmvto5zxqfjxq",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvtoj3s97j9v",
@@ -2637,7 +2856,8 @@
     "spouse": "",
     "father": "pmvto7stevhee",
     "mother": "pmvto5zxqfjxq",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvtojn86h3dw",
@@ -2649,7 +2869,8 @@
     "spouse": "",
     "father": "pmvto7stevhee",
     "mother": "pmvto5zxqfjxq",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvtoreyrudzb",
@@ -2661,7 +2882,8 @@
     "spouse": "",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvtos1bzjtnz",
@@ -2673,7 +2895,8 @@
     "spouse": "pmvnfc9imwto5",
     "father": "",
     "mother": "pmvtoreyrudzb",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvtou2o7nf4w",
@@ -2685,7 +2908,8 @@
     "spouse": "",
     "father": "",
     "mother": "pmvtoreyrudzb",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvucvuy0l2g4",
@@ -2697,7 +2921,8 @@
     "spouse": "",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvud9ve1z6c9",
@@ -2709,7 +2934,8 @@
     "spouse": "pmvoz74cawm4f",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvudc2ol1w7v",
@@ -2721,7 +2947,8 @@
     "spouse": "pmvoyhlb5wud8",
     "father": "pmvoz74cawm4f",
     "mother": "pmvud9ve1z6c9",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvudls3vkcmu",
@@ -2733,7 +2960,8 @@
     "spouse": "",
     "father": "pmvoygl4dqwg7",
     "mother": "pmvuf6qtbhmtz",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuf6qtbhmtz",
@@ -2745,7 +2973,8 @@
     "spouse": "pmvoygl4dqwg7",
     "father": "pmvoyzuayrq7o",
     "mother": "pmvoz1ivcelod",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvug04bxq81e",
@@ -2757,7 +2986,8 @@
     "spouse": "",
     "father": "pmvnfazwfsr4j",
     "mother": "pmvtofai4dmfy",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvug18ynegyp",
@@ -2769,7 +2999,8 @@
     "spouse": "pmvug5zfdymsf",
     "father": "pmvnfazwfsr4j",
     "mother": "pmvtofai4dmfy",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvug2oej17l3",
@@ -2781,7 +3012,8 @@
     "spouse": "pmvug7qouuf70",
     "father": "pmvnfazwfsr4j",
     "mother": "pmvtofai4dmfy",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvug3txoqgah",
@@ -2793,7 +3025,8 @@
     "spouse": "",
     "father": "pmvnfazwfsr4j",
     "mother": "pmvtofai4dmfy",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvug4f60ydm9",
@@ -2805,7 +3038,8 @@
     "spouse": "",
     "father": "pmvnfazwfsr4j",
     "mother": "pmvtofai4dmfy",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvug4w7b1cd9",
@@ -2817,7 +3051,8 @@
     "spouse": "pmvug991knzv0",
     "father": "pmvnfazwfsr4j",
     "mother": "pmvtofai4dmfy",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvug5zfdymsf",
@@ -2829,7 +3064,8 @@
     "spouse": "pmvug18ynegyp",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvug6ny49btr",
@@ -2841,7 +3077,8 @@
     "spouse": "",
     "father": "pmvug5zfdymsf",
     "mother": "pmvug18ynegyp",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvug7qouuf70",
@@ -2853,7 +3090,8 @@
     "spouse": "pmvug2oej17l3",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvug991knzv0",
@@ -2865,7 +3103,8 @@
     "spouse": "pmvug4w7b1cd9",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvug9tlpi3lh",
@@ -2877,7 +3116,8 @@
     "spouse": "",
     "father": "pmvug4w7b1cd9",
     "mother": "pmvug991knzv0",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvugaivbd227",
@@ -2889,7 +3129,8 @@
     "spouse": "",
     "father": "pmvug4w7b1cd9",
     "mother": "pmvug991knzv0",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvugb6dd71aj",
@@ -2901,7 +3142,8 @@
     "spouse": "",
     "father": "pmvug4w7b1cd9",
     "mother": "pmvug991knzv0",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvugestme6xl",
@@ -2913,7 +3155,8 @@
     "spouse": "",
     "father": "pmvug4w7b1cd9",
     "mother": "pmvug991knzv0",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvugfo54tu84",
@@ -2925,7 +3168,8 @@
     "spouse": "",
     "father": "pmvug4w7b1cd9",
     "mother": "pmvug991knzv0",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuhfo4t0xm7",
@@ -2937,7 +3181,8 @@
     "spouse": "pmvuhhvnslcx5",
     "father": "pmvtos1bzjtnz",
     "mother": "pmvnfc9imwto5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuhhvnslcx5",
@@ -2949,7 +3194,8 @@
     "spouse": "pmvuhfo4t0xm7",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvulz2u92eeg",
@@ -2961,7 +3207,8 @@
     "spouse": "",
     "father": "pmvuhfo4t0xm7",
     "mother": "pmvuhhvnslcx5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvum0w9p847g",
@@ -2973,7 +3220,8 @@
     "spouse": "",
     "father": "pmvuhfo4t0xm7",
     "mother": "pmvuhhvnslcx5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvum2bi1evxe",
@@ -2985,7 +3233,8 @@
     "spouse": "",
     "father": "pmvuhfo4t0xm7",
     "mother": "pmvuhhvnslcx5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvum3k1kti8m",
@@ -2997,7 +3246,8 @@
     "spouse": "pmvum8agrf0u9",
     "father": "pmvtos1bzjtnz",
     "mother": "pmvnfc9imwto5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvum6048otc1",
@@ -3009,7 +3259,8 @@
     "spouse": "pmvumdqul7vr1",
     "father": "pmvtos1bzjtnz",
     "mother": "pmvnfc9imwto5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvum798n9ic6",
@@ -3021,7 +3272,8 @@
     "spouse": "pmvumfgzvc0d5",
     "father": "pmvtos1bzjtnz",
     "mother": "pmvnfc9imwto5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvum8agrf0u9",
@@ -3033,7 +3285,8 @@
     "spouse": "pmvum3k1kti8m",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvum9r98svoq",
@@ -3045,7 +3298,8 @@
     "spouse": "pmvumc3h2bpcq",
     "father": "pmvum8agrf0u9",
     "mother": "pmvum3k1kti8m",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvumb00kxvk2",
@@ -3057,7 +3311,8 @@
     "spouse": "",
     "father": "pmvum8agrf0u9",
     "mother": "pmvum3k1kti8m",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvumc3h2bpcq",
@@ -3069,7 +3324,8 @@
     "spouse": "pmvum9r98svoq",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvumdqul7vr1",
@@ -3081,7 +3337,8 @@
     "spouse": "pmvum6048otc1",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvumfgzvc0d5",
@@ -3093,7 +3350,8 @@
     "spouse": "pmvum798n9ic6",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvumfxiqyzf5",
@@ -3105,7 +3363,8 @@
     "spouse": "",
     "father": "pmvum798n9ic6",
     "mother": "pmvumfgzvc0d5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvumh71lxws0",
@@ -3117,7 +3376,8 @@
     "spouse": "",
     "father": "pmvum798n9ic6",
     "mother": "pmvumfgzvc0d5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvumi6iu8hni",
@@ -3129,7 +3389,8 @@
     "spouse": "",
     "father": "pmvum798n9ic6",
     "mother": "pmvumfgzvc0d5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvumij334hqd",
@@ -3141,7 +3402,8 @@
     "spouse": "",
     "father": "pmvum798n9ic6",
     "mother": "pmvumfgzvc0d5",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvummbab8n0u",
@@ -3153,7 +3415,8 @@
     "spouse": "pmw9g99w764os",
     "father": "pmvtou2o7nf4w",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvumo7h9bsnz",
@@ -3165,7 +3428,8 @@
     "spouse": "pmvumpz2y079h",
     "father": "pmvtou2o7nf4w",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvumpz2y079h",
@@ -3177,7 +3441,8 @@
     "spouse": "pmvumo7h9bsnz",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvumquu9jeq9",
@@ -3189,7 +3454,8 @@
     "spouse": "",
     "father": "pmvumo7h9bsnz",
     "mother": "pmvumpz2y079h",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvumrhgcwiqh",
@@ -3201,7 +3467,8 @@
     "spouse": "",
     "father": "pmvumo7h9bsnz",
     "mother": "pmvumpz2y079h",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvums3agtguw",
@@ -3213,7 +3480,8 @@
     "spouse": "",
     "father": "pmvumo7h9bsnz",
     "mother": "pmvumpz2y079h",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvunpp83szuk",
@@ -3225,7 +3493,8 @@
     "spouse": "",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvunu3j0ihpz",
@@ -3237,7 +3506,8 @@
     "spouse": "",
     "father": "pmvo17bunwcv6",
     "mother": "pmvunpp83szuk",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvunvovg2bgf",
@@ -3249,7 +3519,8 @@
     "spouse": "pmvwmtgxk9x9r",
     "father": "pmvo17bunwcv6",
     "mother": "pmvunpp83szuk",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvunw6nu88az",
@@ -3261,7 +3532,8 @@
     "spouse": "pmvwmzc1g4n4i",
     "father": "pmvo17bunwcv6",
     "mother": "pmvunpp83szuk",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvunx3t379po",
@@ -3273,7 +3545,8 @@
     "spouse": "pmvwn2h2mro4t",
     "father": "pmvo17bunwcv6",
     "mother": "pmvunpp83szuk",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuxfy85zj4b",
@@ -3285,7 +3558,8 @@
     "spouse": "",
     "father": "",
     "mother": "pmvoz5s0k8ezi",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuxgsqrn3oa",
@@ -3297,7 +3571,8 @@
     "spouse": "",
     "father": "",
     "mother": "pmvoz5s0k8ezi",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuxj9num0jy",
@@ -3309,7 +3584,8 @@
     "spouse": "pmvoz5s0k8ezi",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuxk6xcvb91",
@@ -3321,7 +3597,8 @@
     "spouse": "pmvoz4z50fvhx",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuxmdfxlskx",
@@ -3333,7 +3610,8 @@
     "spouse": "",
     "father": "pmvoz2lkrcsig",
     "mother": "pmvoz44s6knvg",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuxna8q1zr1",
@@ -3345,7 +3623,8 @@
     "spouse": "pmvuxqpz29o58",
     "father": "pmvoz2lkrcsig",
     "mother": "pmvoz44s6knvg",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuxpdv59lmp",
@@ -3357,7 +3636,8 @@
     "spouse": "",
     "father": "pmvoz2lkrcsig",
     "mother": "pmvoz44s6knvg",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuxqpz29o58",
@@ -3369,7 +3649,8 @@
     "spouse": "pmvuxna8q1zr1",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuxs6gw7yod",
@@ -3381,7 +3662,8 @@
     "spouse": "",
     "father": "pmvuxk6xcvb91",
     "mother": "pmvoz4z50fvhx",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuxuri5pcp7",
@@ -3393,7 +3675,8 @@
     "spouse": "",
     "father": "pmvuxk6xcvb91",
     "mother": "pmvoz4z50fvhx",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuxx1u8kcgr",
@@ -3405,7 +3688,8 @@
     "spouse": "",
     "father": "pmvozluukuv0m",
     "mother": "pmvozjmqgn4bt",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuxxkjqrc28",
@@ -3417,7 +3701,8 @@
     "spouse": "",
     "father": "pmvozluukuv0m",
     "mother": "pmvozjmqgn4bt",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuxxwv4cjl5",
@@ -3429,7 +3714,8 @@
     "spouse": "",
     "father": "pmvozluukuv0m",
     "mother": "pmvozjmqgn4bt",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuxyszxhzyb",
@@ -3441,7 +3727,8 @@
     "spouse": "",
     "father": "pmvozluukuv0m",
     "mother": "pmvozjmqgn4bt",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuy50014tqw",
@@ -3453,7 +3740,8 @@
     "spouse": "pmvuydzjzvjjo",
     "father": "pmvoyzuayrq7o",
     "mother": "pmvoz1ivcelod",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuy5kd2v72p",
@@ -3465,7 +3753,8 @@
     "spouse": "pmvuz17w9cugn",
     "father": "pmvoyzuayrq7o",
     "mother": "pmvoz1ivcelod",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuyb8hafq72",
@@ -3477,7 +3766,8 @@
     "spouse": "pmvuyxpnjk2ku",
     "father": "pmvoyzuayrq7o",
     "mother": "pmvoz1ivcelod",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuycw4lthgu",
@@ -3489,7 +3779,8 @@
     "spouse": "pmvuydclg016n",
     "father": "pmvoyzuayrq7o",
     "mother": "pmvoz1ivcelod",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuydclg016n",
@@ -3501,7 +3792,8 @@
     "spouse": "pmvuycw4lthgu",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuydzjzvjjo",
@@ -3513,7 +3805,8 @@
     "spouse": "pmvuy50014tqw",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuyxpnjk2ku",
@@ -3525,7 +3818,8 @@
     "spouse": "pmvuyb8hafq72",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuyypsbykfd",
@@ -3537,7 +3831,8 @@
     "spouse": "",
     "father": "pmvuyb8hafq72",
     "mother": "pmvuyxpnjk2ku",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuyzlltwu3g",
@@ -3549,7 +3844,8 @@
     "spouse": "",
     "father": "pmvuyb8hafq72",
     "mother": "pmvuyxpnjk2ku",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuz17w9cugn",
@@ -3561,7 +3857,8 @@
     "spouse": "pmvuy5kd2v72p",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuz24njtzwp",
@@ -3573,7 +3870,8 @@
     "spouse": "",
     "father": "pmvuy50014tqw",
     "mother": "pmvuydzjzvjjo",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuz2ov8rrhr",
@@ -3585,7 +3883,8 @@
     "spouse": "",
     "father": "pmvuy50014tqw",
     "mother": "pmvuydzjzvjjo",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuz35uzcygv",
@@ -3597,7 +3896,8 @@
     "spouse": "",
     "father": "pmvuy50014tqw",
     "mother": "pmvuydzjzvjjo",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuz3mttkgq6",
@@ -3609,7 +3909,8 @@
     "spouse": "",
     "father": "pmvuy50014tqw",
     "mother": "pmvuydzjzvjjo",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuz5ivgpzsk",
@@ -3621,7 +3922,8 @@
     "spouse": "",
     "father": "pmvuycw4lthgu",
     "mother": "pmvuydclg016n",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuz6auz6qch",
@@ -3633,7 +3935,8 @@
     "spouse": "",
     "father": "pmvuycw4lthgu",
     "mother": "pmvuydclg016n",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvuz6scal7yy",
@@ -3645,7 +3948,8 @@
     "spouse": "",
     "father": "pmvuycw4lthgu",
     "mother": "pmvuydclg016n",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvwmtgxk9x9r",
@@ -3657,7 +3961,8 @@
     "spouse": "pmvunvovg2bgf",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvwmwuulgcwo",
@@ -3669,7 +3974,8 @@
     "spouse": "",
     "father": "pmvwmtgxk9x9r",
     "mother": "pmvunvovg2bgf",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvwmzc1g4n4i",
@@ -3681,7 +3987,8 @@
     "spouse": "pmvunw6nu88az",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvwn0j84b21t",
@@ -3693,7 +4000,8 @@
     "spouse": "",
     "father": "pmvwmzc1g4n4i",
     "mother": "pmvunw6nu88az",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvwn2h2mro4t",
@@ -3705,7 +4013,8 @@
     "spouse": "pmvunx3t379po",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvwozko0hwmu",
@@ -3717,7 +4026,8 @@
     "spouse": "pmvotuvfdxh65",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvx8iftdem0n",
@@ -3729,7 +4039,8 @@
     "spouse": "pmvou88o7t2ao",
     "father": "",
     "mother": "",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvx8r1viy26c",
@@ -3741,7 +4052,8 @@
     "spouse": "pmvx8rxotkg3f",
     "father": "pmvx8iftdem0n",
     "mother": "pmvou88o7t2ao",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvx8rxotkg3f",
@@ -3753,7 +4065,8 @@
     "spouse": "pmvx8r1viy26c",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvx8trmgfxiq",
@@ -3765,7 +4078,8 @@
     "spouse": "",
     "father": "pmvx8r1viy26c",
     "mother": "pmvx8rxotkg3f",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvx8uf0j03vb",
@@ -3777,7 +4091,8 @@
     "spouse": "",
     "father": "pmvx8r1viy26c",
     "mother": "pmvx8rxotkg3f",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvx8wdyk1h4d",
@@ -3789,7 +4104,8 @@
     "spouse": "",
     "father": "pmvou6mxrrwrm",
     "mother": "pmvou5166crck",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvx8x2js2ra8",
@@ -3801,7 +4117,8 @@
     "spouse": "",
     "father": "pmvou6mxrrwrm",
     "mother": "pmvou5166crck",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmvx8xo8bbbek",
@@ -3813,7 +4130,8 @@
     "spouse": "",
     "father": "pmvou6mxrrwrm",
     "mother": "pmvou5166crck",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmvx90x3fs4uh",
@@ -3825,7 +4143,8 @@
     "spouse": "",
     "father": "pmvout40olmqa",
     "mother": "pmvov0g4vtgc9",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmw3eybasctml",
@@ -3837,7 +4156,8 @@
     "spouse": "pmvne8mzjzvl6",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmw3ez697vklu",
@@ -3849,7 +4169,8 @@
     "spouse": "pmvne7ar4ixff",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmw3f0u4qacmo",
@@ -3861,7 +4182,8 @@
     "spouse": "",
     "father": "pmvne4yfkfiiu",
     "mother": "pmvne66egebkc",
-    "notes": "IPOH - DIED"
+    "notes": "IPOH - DIED",
+    "deceased": false
   },
   {
     "id": "pmw3f1p0xwwo4",
@@ -3873,7 +4195,8 @@
     "spouse": "",
     "father": "pmvne4yfkfiiu",
     "mother": "pmvne66egebkc",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmw3f2952kqg8",
@@ -3885,7 +4208,8 @@
     "spouse": "",
     "father": "pmvne4yfkfiiu",
     "mother": "pmvne66egebkc",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   },
   {
     "id": "pmw3f3kesvg4g",
@@ -3897,7 +4221,8 @@
     "spouse": "",
     "father": "pmvne4yfkfiiu",
     "mother": "pmvne66egebkc",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmw3f4er6yw4e",
@@ -3909,7 +4234,8 @@
     "spouse": "",
     "father": "pmvne4yfkfiiu",
     "mother": "pmvne66egebkc",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmw7atsnb1i3g",
@@ -3921,7 +4247,8 @@
     "spouse": "pmvnyw3nq4hsw",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmw7b20i30b68",
@@ -3933,7 +4260,8 @@
     "spouse": "pmw7b2jihmcb5",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmw7b2jihmcb5",
@@ -3945,7 +4273,8 @@
     "spouse": "pmw7b20i30b68",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmw8wad81fcd0",
@@ -3957,7 +4286,8 @@
     "spouse": "",
     "father": "",
     "mother": "pmvtoilor1hja",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmw8wbv0s9lto",
@@ -3969,7 +4299,8 @@
     "spouse": "",
     "father": "",
     "mother": "pmvtoilor1hja",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmw8wcanfdl95",
@@ -3981,7 +4312,8 @@
     "spouse": "",
     "father": "",
     "mother": "pmvtoilor1hja",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmw9g99w764os",
@@ -3993,7 +4325,8 @@
     "spouse": "pmvummbab8n0u",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false
   },
   {
     "id": "pmwab2li0kmp9",
@@ -4005,6 +4338,7 @@
     "spouse": "",
     "father": "pmvnzvknsur17",
     "mother": "pmvnmi3grr9zl",
-    "notes": "DIED"
+    "notes": "DIED",
+    "deceased": false
   }
 ]
