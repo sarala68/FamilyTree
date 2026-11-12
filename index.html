@@ -35,7 +35,13 @@ body.dragging, body.dragging *{cursor:grabbing !important}
 .ghmsg.err{color:#9b2c2c} .ghmsg.ok{color:#1f6b45}
 #seniors{position:absolute;top:10px;right:12px;z-index:5;min-width:170px;max-width:260px;max-height:calc(100% - 20px);overflow:auto;background:rgba(251,252,250,.96);border:1px solid var(--edge);border-top:4px solid var(--brass);border-radius:6px;box-shadow:0 2px 8px rgba(20,40,32,.18);padding:6px 0;cursor:default}
 #seniors[hidden]{display:none}
-#seniors .shead{font:600 12px "Segoe UI",system-ui,sans-serif;letter-spacing:.3px;text-transform:uppercase;color:var(--muted);padding:2px 12px 6px}
+#seniors{padding:0;overflow:hidden;display:flex;flex-direction:column}
+#seniors .shead{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;border:0;border-radius:0;background:transparent;font:600 13px "Segoe UI",system-ui,sans-serif;color:var(--forest);padding:9px 12px;cursor:pointer;white-space:nowrap}
+#seniors .shead:hover{background:#e6eee9}
+#seniors .shead .arr{font-size:11px;transition:transform .15s}
+#seniors.open .shead .arr{transform:rotate(180deg)}
+#seniors .slist{overflow:auto;border-top:1px solid var(--edge);padding:4px 0;max-height:60vh}
+#seniors .slist[hidden]{display:none}
 #seniors .srow{display:block;width:100%;text-align:left;border:0;border-radius:0;background:transparent;padding:5px 12px;font:600 14px Georgia,"Times New Roman",serif;color:var(--ink);cursor:pointer}
 #seniors .srow:hover{background:#e6eee9}
 #seniors .sage{font-family:"Segoe UI",system-ui,sans-serif;font-weight:600;color:var(--forest)}
@@ -450,10 +456,16 @@ function updateSeniors(){
     .sort((a, b) => b.age - a.age || (a.p.name || "").localeCompare(b.p.name || ""));
   if(!list.length){ box.hidden = true; box.innerHTML = ""; return; }
   box.hidden = false;
-  box.innerHTML = '<div class="shead">Age 60 and over</div>' + list.map(x =>
-    `<button type="button" class="srow" data-id="${esc(x.p.id)}">${esc(x.p.name || "Unnamed")}<span class="sage"> | ${x.age}</span></button>`).join("");
-  box.querySelectorAll(".srow").forEach(b => { b.onclick = () => showPerson(b.dataset.id); });
+  box.classList.toggle("open", seniorsOpen);
+  box.innerHTML = `<button type="button" class="shead" aria-expanded="${seniorsOpen}" aria-controls="slist">Age 60 and over (${list.length}) <span class="arr" aria-hidden="true">▼</span></button>` +
+    `<div class="slist" id="slist"${seniorsOpen ? "" : " hidden"}>` + list.map(x =>
+    `<button type="button" class="srow" data-id="${esc(x.p.id)}">${esc(x.p.name || "Unnamed")}<span class="sage"> | ${x.age}</span></button>`).join("") + "</div>";
+  box.querySelector(".shead").onclick = () => { seniorsOpen = !seniorsOpen; updateSeniors(); };
+  box.querySelectorAll(".srow").forEach(b => { b.onclick = () => { seniorsOpen = false; updateSeniors(); showPerson(b.dataset.id); }; });
 }
+let seniorsOpen = false;
+document.addEventListener("pointerdown", e => { if(seniorsOpen && !$("seniors").contains(e.target)){ seniorsOpen = false; updateSeniors(); } }, true);
+document.addEventListener("keydown", e => { if(e.key === "Escape" && seniorsOpen){ seniorsOpen = false; updateSeniors(); } });
 ["pointerdown", "wheel", "click"].forEach(ev => $("seniors").addEventListener(ev, e => e.stopPropagation(), {passive:true}));
 function render(){
   try{ updateSeniors(); }catch(err){ console.warn(err); }
