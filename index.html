@@ -46,6 +46,23 @@ body.dragging, body.dragging *{cursor:grabbing !important}
 #seniors .srow:hover{background:#e6eee9}
 #seniors .sage{font-family:"Segoe UI",system-ui,sans-serif;font-weight:600;color:var(--forest)}
 @media print{#seniors{box-shadow:none}}
+[data-gate].locked{opacity:.4;filter:saturate(.4)}
+[data-gate].locked:hover{background-image:none}
+#pinDlg{width:min(340px,92vw);border-radius:14px;background:linear-gradient(#fdfefd,#e9efeb)}
+.pinbox{padding:22px 24px 18px;text-align:center}
+.pinbox h2{font:600 22px Georgia,serif;margin:0 0 4px}
+.pinsub{color:var(--muted);font-size:14px;margin:0}
+.pin{display:flex;gap:12px;justify-content:center;margin:20px 0 10px}
+.pin input{width:54px;height:64px;padding:0;text-align:center;font:700 28px Georgia,serif;color:var(--forest);caret-color:transparent;
+  border:1px solid #98aaa1;border-radius:10px;background:linear-gradient(#f4f8f5,#d9e2dd);
+  box-shadow:inset 0 3px 6px rgba(0,0,0,.28),inset 0 -2px 0 rgba(255,255,255,.7),0 4px 0 #aebdb5,0 8px 12px rgba(20,40,32,.28);transition:transform .08s,box-shadow .08s}
+.pin input:focus{outline:none;border-color:var(--brass);transform:translateY(2px);
+  box-shadow:inset 0 3px 6px rgba(0,0,0,.3),inset 0 -2px 0 rgba(255,255,255,.7),0 2px 0 #aebdb5,0 0 0 3px rgba(176,138,62,.55)}
+.pin.shake{animation:pinshake .35s}
+@keyframes pinshake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.pinmsg{min-height:20px;color:#9b2c2c;font-size:14px}
+#pinDlg .btns{justify-content:center;margin-top:6px}
+@media (prefers-reduced-motion:reduce){.pin.shake{animation:none}}
 #viewLabel{font:italic 15px Georgia,serif;opacity:.9;margin-right:6px}
 #stage{position:absolute;left:0;top:0;transform-origin:0 0}
 svg#lines{position:absolute;left:0;top:0;pointer-events:none}
@@ -103,7 +120,7 @@ form .hint{font-size:12px;color:var(--muted);margin-top:2px}
   <span id="viewLabel"></span>
   <button id="btnHome">Home</button>
   <button id="btnFull">Full tree</button>
-  <button class="add" id="btnAdd">Add person</button>
+  <button class="add" id="btnAdd" data-gate>Add person</button>
   <input id="search" type="search" placeholder="Search…" title="Type to highlight; press Enter to show that person's family" aria-label="Search name">
   <span class="sp"></span>
   <button id="zOut" aria-label="Zoom out">−</button>
@@ -117,6 +134,7 @@ form .hint{font-size:12px;color:var(--muted);margin-top:2px}
 </header>
 <div id="viewport"><div id="sizer"><div id="stage"><svg id="lines"></svg></div></div><div id="seniors" hidden aria-label="People aged 60 and over"></div></div>
 <dialog id="dlg"><div class="dlg-body" id="dlgBody"></div></dialog>
+<dialog id="pinDlg" aria-label="PIN"></dialog>
 
 <script>
 /* ============ SETTINGS ============ */
@@ -686,21 +704,23 @@ function showPerson(id){
   body.innerHTML = `<div id="big"></div><h2>${esc(p.name || "Unnamed")}</h2><div class="sub">${esc(dates(p))}</div>
     ${group("Parents", parents)}${group("Siblings", siblings)}${group("Spouse", spouse ? [spouse] : [])}${group("Children", kids)}
     ${p.notes ? `<div class="notes">${esc(p.notes)}</div>` : ""}
-    <div class="addrow"><span>Add to ${esc(p.name || "this person")}:</span><button id="aSp">+ Spouse</button><button id="aCh">+ Child</button><button id="aPa">+ Parent</button><button id="aSb">+ Sibling</button></div>
-    <div class="btns"><button class="danger" id="bDel">Delete</button><button id="bFocus">Show their family</button><button id="bClose">Close</button><button class="primary" id="bEdit">Edit</button></div>`;
+    <div class="addrow"><span>Add to ${esc(p.name || "this person")}:</span><button id="aSp" data-gate>+ Spouse</button><button id="aCh" data-gate>+ Child</button><button id="aPa" data-gate>+ Parent</button><button id="aSb" data-gate>+ Sibling</button></div>
+    <div class="btns"><button class="danger" id="bDel" data-gate>Delete</button><button id="bFocus">Show their family</button><button id="bClose">Close</button><button class="primary" id="bEdit">Edit</button></div>`;
   $("big").appendChild(avatar(p, 150));
   body.querySelectorAll("[data-av]").forEach(el => { const r = byId(el.dataset.av); if(r) el.appendChild(avatar(r, 30)); });
   body.querySelectorAll("[data-go]").forEach(a => a.onclick = () => showPerson(a.dataset.go));
   $("bClose").onclick = () => dlg.close();
   $("bFocus").onclick = () => { dlg.close(); setFocus(id); };
   $("bEdit").onclick = () => showForm(p);
-  $("aSp").onclick = () => {
+  $("aSp").onclick = async () => {
+    if(!(await ensureUnlocked())) return;
     if(byId(p.spouse) && !confirm(byId(p.spouse).name + " is already linked as spouse. Replace with a new spouse?")) return;
     showForm(null, {rel:"spouse", of:p.id});
   };
-  $("aCh").onclick = () => showForm(null, {rel:"child", of:p.id});
-  $("aPa").onclick = () => showForm(null, {rel:"parent", of:p.id});
-  $("aSb").onclick = () => {
+  $("aCh").onclick = async () => { if(await ensureUnlocked()) showForm(null, {rel:"child", of:p.id}); };
+  $("aPa").onclick = async () => { if(await ensureUnlocked()) showForm(null, {rel:"parent", of:p.id}); };
+  $("aSb").onclick = async () => {
+    if(!(await ensureUnlocked())) return;
     if(!byId(p.father) && !byId(p.mother)){
       const nm = p.name || "this person";
       if(!confirm(nm + " has no parents in the tree yet. Create placeholder parents so a sibling can be linked? You can rename them later.")) return;
@@ -711,12 +731,14 @@ function showPerson(id){
     }
     showForm(null, {rel:"sibling", of:p.id});
   };
-  $("bDel").onclick = () => {
+  $("bDel").onclick = async () => {
+    if(!(await ensureUnlocked())) return;
     if(!confirm("Delete " + (p.name || "this person") + "?")) return;
     people = people.filter(x => x.id !== id);
     people.forEach(x => { ["father","mother","spouse"].forEach(k => { if(x[k] === id) x[k] = ""; }); });
     save(); render(); dlg.close();
   };
+  updateLock();
   if(!dlg.open) dlg.showModal();
 }
 
@@ -907,7 +929,7 @@ function showForm(p, ctx){
   if(!dlg.open) dlg.showModal();
   $("fName").focus();
 }
-$("btnAdd").onclick = () => showForm(null);
+$("btnAdd").onclick = async () => { if(await ensureUnlocked()) showForm(null); };
 
 /* ============ EXPORT / IMPORT / PRINT / CLEAR ============ */
 $("btnExport").onclick = () => {
@@ -1083,6 +1105,94 @@ function showSync(){
   if(!dlg.open) dlg.showModal();
 }
 $("btnGH").onclick = showSync;
+
+
+/* ============ PIN LOCK (Add person / Delete) ============ */
+const PIN_KEY = "familyTreePin", PIN_SALT = "family-tree", IDLE_MS = 5 * 60 * 1000;
+let unlockedUntil = 0;
+const isUnlocked = () => Date.now() < unlockedUntil;
+function hashPin(pin){                                  // salted, so the PIN itself is never stored as plain digits
+  let h1 = 0xdeadbeef, h2 = 0x41c6ce57; const str = PIN_SALT + pin;
+  for(let i = 0, ch; i < str.length; i++){ ch = str.charCodeAt(i); h1 = Math.imul(h1 ^ ch, 2654435761); h2 = Math.imul(h2 ^ ch, 1597334677); }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36);
+}
+const getPin = () => { try{ return localStorage.getItem(PIN_KEY); }catch(e){ return null; } };
+function updateLock(){
+  const on = isUnlocked();
+  document.querySelectorAll("[data-gate]").forEach(b => {
+    b.classList.toggle("locked", !on);
+    b.title = on ? "" : "Locked: press to enter your 4-digit PIN";
+  });
+}
+setInterval(() => { if(unlockedUntil && !isUnlocked()) unlockedUntil = 0; updateLock(); }, 5000);   // relock after 5 quiet minutes
+document.addEventListener("pointerdown", () => { if(isUnlocked()) unlockedUntil = Date.now() + IDLE_MS; }, true);
+
+function pinPrompt({title, sub, check, wrong, allowChange}){
+  return new Promise(resolve => {
+    const d = $("pinDlg");
+    d.innerHTML = `<div class="pinbox"><h2>${esc(title)}</h2><p class="pinsub">${esc(sub || "")}</p>
+      <div class="pin">${[1,2,3,4].map(n => `<input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="Digit ${n}">`).join("")}</div>
+      <div class="pinmsg" role="alert"></div>
+      <div class="btns">${allowChange ? '<button type="button" id="pinChange">Change PIN</button>' : ""}<button type="button" id="pinCancel">Cancel</button></div></div>`;
+    const row = d.querySelector(".pin"), ins = [...row.querySelectorAll("input")], msg = d.querySelector(".pinmsg");
+    let done = false;
+    const finish = v => { if(done) return; done = true; d.close(); resolve(v); };
+    const submit = () => {
+      const pin = ins.map(i => i.value).join("");
+      if(!/^\d{4}$/.test(pin)) return;
+      if(check && !check(pin)){
+        msg.textContent = wrong || "Wrong PIN. Try again.";
+        row.classList.remove("shake"); void row.offsetWidth; row.classList.add("shake");
+        ins.forEach(i => { i.value = ""; }); ins[0].focus(); return;
+      }
+      finish({pin});
+    };
+    ins.forEach((inp, i) => {
+      inp.addEventListener("input", () => {
+        inp.value = inp.value.replace(/\D/g, "").slice(-1);
+        if(inp.value && i < 3) ins[i + 1].focus();
+        if(ins.every(x => x.value)) submit();
+      });
+      inp.addEventListener("keydown", e => {
+        if(e.key === "Backspace" && !inp.value && i > 0){ e.preventDefault(); ins[i - 1].value = ""; ins[i - 1].focus(); }
+        if(e.key === "Enter") submit();
+      });
+      inp.addEventListener("paste", e => {
+        const t = ((e.clipboardData && e.clipboardData.getData("text")) || "").replace(/\D/g, "").slice(0, 4);
+        if(!t) return; e.preventDefault();
+        t.split("").forEach((c, k) => { ins[k].value = c; });
+        ins[Math.min(t.length, 3)].focus(); if(t.length === 4) submit();
+      });
+      inp.addEventListener("focus", () => inp.select());
+    });
+    $("pinCancel").onclick = () => finish(null);
+    if(allowChange) $("pinChange").onclick = () => finish({change:true});
+    d.oncancel = e => { e.preventDefault(); finish(null); };
+    d.showModal(); ins[0].focus();
+  });
+}
+async function createPin(title, sub){
+  const a = await pinPrompt({title, sub}); if(!a) return false;
+  const b = await pinPrompt({title:"Confirm PIN", sub:"Enter the same 4 digits again.", check:p => p === a.pin, wrong:"Those digits do not match. Try again."});
+  if(!b) return false;
+  try{ localStorage.setItem(PIN_KEY, hashPin(a.pin)); }catch(e){ alert("This browser could not save the PIN."); return false; }
+  unlockedUntil = Date.now() + IDLE_MS; updateLock(); return true;
+}
+async function ensureUnlocked(){
+  if(isUnlocked()){ unlockedUntil = Date.now() + IDLE_MS; return true; }
+  if(!getPin()) return createPin("Create a PIN", "Choose 4 digits. You will need them to add or delete people on this device.");
+  const r = await pinPrompt({title:"Enter PIN", sub:"Enter your 4-digit PIN to unlock.", check:p => hashPin(p) === getPin(), allowChange:true});
+  if(!r) return false;
+  if(r.change){
+    const ok = await pinPrompt({title:"Current PIN", sub:"Enter your current PIN first.", check:p => hashPin(p) === getPin()});
+    if(!ok) return false;
+    return createPin("New PIN", "Choose a new 4-digit PIN.");
+  }
+  unlockedUntil = Date.now() + IDLE_MS; updateLock(); return true;
+}
+updateLock();
 
 /* ============ STARTUP ============ */
 /* family-tree.json in the repository is the master copy.
