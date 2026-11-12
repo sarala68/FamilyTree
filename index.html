@@ -274,7 +274,7 @@ function dates(p, short){
   const lines = [], age = ageOf(p);
   if(p.birth) lines.push("Born: " + (short ? (yearOf(p.birth) || p.birth) : fmtDate(p.birth)) + (age !== null ? " | Age " + age : ""));
   if(p.death) lines.push("Died: " + (short ? (yearOf(p.death) || p.death) : fmtDate(p.death)));
-  else if(p.deceased) lines.push("Died: date not recorded");
+  else if(p.deceased) lines.push("Deceased");
   return lines.join("\n");
 }
 
@@ -814,10 +814,10 @@ function showForm(p, ctx){
         <option value=""${!p.gender?" selected":""}>Not set</option><option value="M"${p.gender==="M"?" selected":""}>Male</option><option value="F"${p.gender==="F"?" selected":""}>Female</option></select></div></div>
     <div class="row">
       <div><label for="fBirth">Born</label><div class="dwrap"><input id="fBirth" value="${esc(dispDate(p.birth))}" placeholder="1971 or 02/04/1971" autocomplete="off"><button type="button" class="cal" data-for="fBirth" aria-label="Pick birth date from a calendar" title="Calendar">📅</button><input type="date" class="hidedate" tabindex="-1" aria-hidden="true"></div></div>
-      <div><label for="fDeath">Died</label><div class="dwrap"><input id="fDeath" value="${esc(dispDate(p.death))}" placeholder="1971 or 02/04/1971" autocomplete="off"><button type="button" class="cal" data-for="fDeath" aria-label="Pick death date from a calendar" title="Calendar">📅</button><input type="date" class="hidedate" tabindex="-1" aria-hidden="true"></div></div>
+      <div><label for="fDeath">Died</label><div class="dwrap"><input id="fDeath" value="${esc(dispDate(p.death))}" placeholder="1971 or 02/04/1971" autocomplete="off"><button type="button" class="cal" data-for="fDeath" aria-label="Pick death date from a calendar" title="Calendar">📅</button><input type="date" class="hidedate" tabindex="-1" aria-hidden="true"></div>
+        <label class="chk" for="fGone"><input type="checkbox" id="fGone"${isGone(p) ? " checked" : ""}> Died</label></div>
     </div>
     <div class="hint">Type just a year, or a full date as day/month/year. Use 📅 to pick from a calendar.</div>
-    <label class="chk" for="fGone"><input type="checkbox" id="fGone"${p.deceased ? " checked" : ""}> Passed away (date not known)</label>
     <label for="fPhoto">Photo</label>
     <div style="display:flex;gap:10px;align-items:center">
       <div id="fPrev"></div>
@@ -853,14 +853,15 @@ function showForm(p, ctx){
   };
   document.querySelectorAll("#f .cal").forEach(btn => {
     const txt = $(btn.dataset.for), dt = btn.parentElement.querySelector(".hidedate");
-    txt.oninput = () => txt.setCustomValidity("");
+    txt.oninput = () => { txt.setCustomValidity(""); if(txt.id === "fDeath" && txt.value.trim()) $("fGone").checked = true; };
     btn.onclick = () => {
       const v = parseDateInput(txt.value);
       dt.value = isISO(v) ? v : (v && /^\d{4}$/.test(v) ? v + "-01-01" : "");
       try{ dt.showPicker(); }catch(err){ dt.focus(); dt.click(); }
     };
-    dt.onchange = () => { if(dt.value){ txt.value = dispDate(dt.value); txt.setCustomValidity(""); } };
+    dt.onchange = () => { if(dt.value){ txt.value = dispDate(dt.value); txt.setCustomValidity(""); if(txt.id === "fDeath") $("fGone").checked = true; } };
   });
+  $("fGone").onchange = () => { if(!$("fGone").checked){ $("fDeath").value = ""; $("fDeath").setCustomValidity(""); } };
   $("fCancel").onclick = () => isNew ? (anchor ? showPerson(anchor.id) : dlg.close()) : showPerson(p.id);
   $("f").onsubmit = e => {
     e.preventDefault();
@@ -872,7 +873,8 @@ function showForm(p, ctx){
       if(v === null){ el.setCustomValidity("Enter a year (1971) or a date such as 02/04/1971"); el.reportValidity(); }
       return v;
     };
-    const bv = readDate("fBirth", p.birth), dv = readDate("fDeath", p.death);
+    const bv = readDate("fBirth", p.birth); let dv = readDate("fDeath", p.death);
+    if(!$("fGone").checked) dv = "";
     if(bv === null || dv === null) return;
     const draft = {
       deceased: $("fGone").checked,
