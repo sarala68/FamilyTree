@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Family Tree</title>
 <style>
 :root{
@@ -90,6 +90,7 @@ form .chk input{width:auto;padding:0}
 .btns .primary{background:var(--forest);color:#fff;border-color:var(--forest)}
 .btns .danger{color:#9b2c2c;border-color:#d9b3b3;margin-right:auto}
 form label{display:block;margin:10px 0 3px;font-weight:600;font-size:13.5px}
+@media (pointer:coarse){input,select,textarea{font-size:16px}}   /* stops iPad zooming the page when a box is tapped */
 form input,form select,form textarea{width:100%;padding:7px 9px;border:1px solid var(--edge);border-radius:5px;background:#fff}
 form .row{display:flex;gap:10px} form .row>div{flex:1}
 form .hint{font-size:12px;color:var(--muted);margin-top:2px}
@@ -558,14 +559,34 @@ function centerOn(c){
   applyScale();
 }
 
-/* ---- drag to pan, wheel to zoom ---- */
+/* ---- drag to pan, pinch / wheel to zoom ---- */
 (function(){
-  const vp = $("viewport"); let down = null, dragged = false;
+  const vp = $("viewport");
+  const ptrs = new Map();            // every finger / pointer currently down
+  let down = null, dragged = false, pinch = null;
+  const rel = e => { const r = vp.getBoundingClientRect(); return {x:e.clientX - r.left, y:e.clientY - r.top}; };
+  const startPan = (id, x, y) => { down = {x, y, px:panX, py:panY, id}; };
   vp.addEventListener("pointerdown", e => {
     if(e.pointerType === "mouse" && e.button !== 0) return;
-    down = {x:e.clientX, y:e.clientY, px:panX, py:panY, id:e.pointerId}; dragged = false;
+    ptrs.set(e.pointerId, rel(e));
+    if(ptrs.size === 1){ startPan(e.pointerId, e.clientX, e.clientY); dragged = false; }
+    else if(ptrs.size === 2){
+      const [a, b] = [...ptrs.values()];
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      pinch = {d: Math.hypot(a.x - b.x, a.y - b.y) || 1, scale, cx:(mx - panX) / scale, cy:(my - panY) / scale};
+      down = null; dragged = true; document.body.classList.add("dragging");     // a pinch is never a tap
+    }
   });
   vp.addEventListener("pointermove", e => {
+    if(!ptrs.has(e.pointerId)) return;
+    ptrs.set(e.pointerId, rel(e));
+    if(pinch && ptrs.size >= 2){
+      const [a, b] = [...ptrs.values()];
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      const ns = Math.min(2.5, Math.max(.05, pinch.scale * (Math.hypot(a.x - b.x, a.y - b.y) / pinch.d)));
+      scale = ns; panX = mx - pinch.cx * ns; panY = my - pinch.cy * ns;      // keep the spot between your fingers fixed
+      applyScale(); return;
+    }
     if(!down || e.pointerId !== down.id) return;
     const dx = e.clientX - down.x, dy = e.clientY - down.y;
     if(!dragged && Math.hypot(dx, dy) > 5){
@@ -574,7 +595,17 @@ function centerOn(c){
     }
     if(dragged){ panX = down.px + dx; panY = down.py + dy; applyScale(); }
   });
-  const end = () => { if(!down) return; down = null; document.body.classList.remove("dragging"); if(dragged) setTimeout(() => { dragged = false; }, 0); };
+  const end = e => {
+    ptrs.delete(e.pointerId);
+    if(pinch && ptrs.size < 2){
+      pinch = null;
+      if(ptrs.size === 1){ const [id, p] = [...ptrs.entries()][0]; const r = vp.getBoundingClientRect(); startPan(id, p.x + r.left, p.y + r.top); }   // carry on dragging with the finger left
+    }
+    if(ptrs.size === 0){
+      down = null; document.body.classList.remove("dragging");
+      if(dragged) setTimeout(() => { dragged = false; }, 0);
+    }
+  };
   vp.addEventListener("pointerup", end); vp.addEventListener("pointercancel", end);
   vp.addEventListener("click", e => { if(dragged){ e.stopPropagation(); e.preventDefault(); } }, true);
   vp.addEventListener("wheel", e => {
@@ -582,6 +613,8 @@ function centerOn(c){
     const r = vp.getBoundingClientRect();
     zoomAt(e.deltaY < 0 ? 1.1 : 1 / 1.1, e.clientX - r.left, e.clientY - r.top);
   }, {passive:false});
+  // Safari on iPad/iPhone has its own pinch gesture; stop it zooming the whole page instead of the tree
+  ["gesturestart", "gesturechange", "gestureend"].forEach(n => vp.addEventListener(n, e => e.preventDefault()));
 })();
 
 /* ---- focus view: one person's immediate family ---- */
