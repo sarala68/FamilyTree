@@ -33,6 +33,13 @@ body.dragging, body.dragging *{cursor:grabbing !important}
 .ghnote{font-size:13px;color:var(--muted);margin:8px 0}
 .ghmsg{margin:10px 0 0;min-height:20px;font-size:14px}
 .ghmsg.err{color:#9b2c2c} .ghmsg.ok{color:#1f6b45}
+#seniors{position:absolute;top:10px;right:12px;z-index:5;min-width:170px;max-width:260px;max-height:calc(100% - 20px);overflow:auto;background:rgba(251,252,250,.96);border:1px solid var(--edge);border-top:4px solid var(--brass);border-radius:6px;box-shadow:0 2px 8px rgba(20,40,32,.18);padding:6px 0;cursor:default}
+#seniors[hidden]{display:none}
+#seniors .shead{font:600 12px "Segoe UI",system-ui,sans-serif;letter-spacing:.3px;text-transform:uppercase;color:var(--muted);padding:2px 12px 6px}
+#seniors .srow{display:block;width:100%;text-align:left;border:0;border-radius:0;background:transparent;padding:5px 12px;font:600 14px Georgia,"Times New Roman",serif;color:var(--ink);cursor:pointer}
+#seniors .srow:hover{background:#e6eee9}
+#seniors .sage{font-family:"Segoe UI",system-ui,sans-serif;font-weight:600;color:var(--forest)}
+@media print{#seniors{box-shadow:none}}
 #viewLabel{font:italic 15px Georgia,serif;opacity:.9;margin-right:6px}
 #stage{position:absolute;left:0;top:0;transform-origin:0 0}
 svg#lines{position:absolute;left:0;top:0;pointer-events:none}
@@ -67,6 +74,8 @@ dialog::backdrop{background:rgba(20,32,28,.5)}
 .addrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--edge)}
 .addrow span{color:var(--muted);font-size:13.5px;margin-right:2px}
 .addrow button{border-color:var(--forest);color:var(--forest)}
+.chk{display:flex !important;align-items:center;gap:8px;font-weight:400 !important;margin:8px 0 0 !important}
+form .chk input{width:auto;padding:0}
 .dwrap{display:flex;gap:4px;position:relative}
 .dwrap input:not(.hidedate){flex:1;min-width:0}
 .dwrap .cal{padding:4px 8px}
@@ -99,7 +108,7 @@ form .hint{font-size:12px;color:var(--muted);margin-top:2px}
   <button id="btnPrint">Print</button>
   <input type="file" id="file" accept=".json,application/json" hidden>
 </header>
-<div id="viewport"><div id="sizer"><div id="stage"><svg id="lines"></svg></div></div></div>
+<div id="viewport"><div id="sizer"><div id="stage"><svg id="lines"></svg></div></div><div id="seniors" hidden aria-label="People aged 60 and over"></div></div>
 <dialog id="dlg"><div class="dlg-body" id="dlgBody"></div></dialog>
 
 <script>
@@ -134,7 +143,7 @@ function normalizePeople(arr){
     seen.add(id);
     const g = S(p.gender);
     out.push(Object.assign({}, p, {id, name:S(p.name), gender:/^m/i.test(g) ? "M" : /^f/i.test(g) ? "F" : "",
-      birth:S(p.birth), death:S(p.death), photo:S(p.photo), spouse:S(p.spouse), father:S(p.father), mother:S(p.mother), notes:S(p.notes)}));
+      deceased:p.deceased === true || p.deceased === "true", birth:S(p.birth), death:S(p.death), photo:S(p.photo), spouse:S(p.spouse), father:S(p.father), mother:S(p.mother), notes:S(p.notes)}));
   });
   return out;
 }
@@ -242,10 +251,12 @@ function dateParts(v){
   if(isISO(v)){ const [y, m, d] = v.split("-").map(Number); return {y, m, d}; }
   const m = (v || "").match(/\d{4}/); return m ? {y: +m[0]} : null;
 }
+const isGone = p => !!(p.death || p.deceased);
 function ageOf(p){
   const b = dateParts(p.birth); if(!b) return null;
   let e;
   if(p.death){ e = dateParts(p.death); if(!e) return null; }
+  else if(p.deceased) return null;
   else { const n = new Date(); e = {y:n.getFullYear(), m:n.getMonth() + 1, d:n.getDate()}; }
   let age = e.y - b.y;
   if(b.m && e.m && (e.m < b.m || (e.m === b.m && e.d < b.d))) age--;
@@ -256,6 +267,7 @@ function dates(p, short){
   const lines = [], age = ageOf(p);
   if(p.birth) lines.push("Born: " + (short ? (yearOf(p.birth) || p.birth) : fmtDate(p.birth)) + (age !== null ? " | Age " + age : ""));
   if(p.death) lines.push("Died: " + (short ? (yearOf(p.death) || p.death) : fmtDate(p.death)));
+  else if(p.deceased) lines.push("Died: date not recorded");
   return lines.join("\n");
 }
 
@@ -430,7 +442,21 @@ function layout(){
 }
 
 /* ============ RENDER ============ */
+// Everyone living who is 60 or over, oldest first, shown top right as "Name | Age"
+function updateSeniors(){
+  const box = $("seniors"); if(!box) return;
+  const list = people.map(p => ({p, age: isGone(p) ? null : ageOf(p)}))
+    .filter(x => x.age !== null && x.age >= 60)
+    .sort((a, b) => b.age - a.age || (a.p.name || "").localeCompare(b.p.name || ""));
+  if(!list.length){ box.hidden = true; box.innerHTML = ""; return; }
+  box.hidden = false;
+  box.innerHTML = '<div class="shead">Age 60 and over</div>' + list.map(x =>
+    `<button type="button" class="srow" data-id="${esc(x.p.id)}">${esc(x.p.name || "Unnamed")}<span class="sage"> | ${x.age}</span></button>`).join("");
+  box.querySelectorAll(".srow").forEach(b => { b.onclick = () => showPerson(b.dataset.id); });
+}
+["pointerdown", "wheel", "click"].forEach(ev => $("seniors").addEventListener(ev, e => e.stopPropagation(), {passive:true}));
 function render(){
+  try{ updateSeniors(); }catch(err){ console.warn(err); }
   try{ drawTree(); }
   catch(err){
     console.error(err);
@@ -746,6 +772,7 @@ function showForm(p, ctx){
       <div><label for="fDeath">Died</label><div class="dwrap"><input id="fDeath" value="${esc(dispDate(p.death))}" placeholder="1971 or 02/04/1971" autocomplete="off"><button type="button" class="cal" data-for="fDeath" aria-label="Pick death date from a calendar" title="Calendar">📅</button><input type="date" class="hidedate" tabindex="-1" aria-hidden="true"></div></div>
     </div>
     <div class="hint">Type just a year, or a full date as day/month/year. Use 📅 to pick from a calendar.</div>
+    <label class="chk" for="fGone"><input type="checkbox" id="fGone"${p.deceased ? " checked" : ""}> Passed away (date not known)</label>
     <label for="fPhoto">Photo</label>
     <div style="display:flex;gap:10px;align-items:center">
       <div id="fPrev"></div>
@@ -803,6 +830,7 @@ function showForm(p, ctx){
     const bv = readDate("fBirth", p.birth), dv = readDate("fDeath", p.death);
     if(bv === null || dv === null) return;
     const draft = {
+      deceased: $("fGone").checked,
       name: $("fName").value.trim(), gender: $("fGender").value, birth: bv,
       death: dv, photo: $("fPhoto").value.trim(), father: $("fFather").value,
       mother: $("fMother").value, spouse: $("fSpouse").value, notes: $("fNotes").value.trim()
