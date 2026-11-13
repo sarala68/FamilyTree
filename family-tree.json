@@ -1284,7 +1284,7 @@
     "father": "",
     "mother": "",
     "notes": "",
-    "deceased": false
+    "deceased": true
   },
   {
     "id": "pmvono1s4qrgj",
@@ -1739,7 +1739,7 @@
     "father": "",
     "mother": "",
     "notes": "DIED",
-    "deceased": false
+    "deceased": true
   },
   {
     "id": "pmvouqgm58u4l",
@@ -1804,7 +1804,7 @@
     "father": "",
     "mother": "",
     "notes": "DIED",
-    "deceased": false
+    "deceased": true
   },
   {
     "id": "pmvov7940d22m",
@@ -1817,7 +1817,7 @@
     "father": "",
     "mother": "",
     "notes": "DIED",
-    "deceased": false
+    "deceased": true
   },
   {
     "id": "pmvov9p4geida",
@@ -1830,7 +1830,7 @@
     "father": "",
     "mother": "",
     "notes": "DIED",
-    "deceased": false
+    "deceased": true
   },
   {
     "id": "pmvovbofz27gk",
