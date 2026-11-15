@@ -2514,7 +2514,7 @@
     "gender": "F",
     "birth": "1999-02-02",
     "death": "",
-    "photo": "",
+    "photo": "PICTURE/MANIMALA SELVARAJU.jpeg",
     "spouse": "",
     "father": "pmvozeyban8zw",
     "mother": "",
@@ -4428,6 +4428,19 @@
     "photo": "",
     "spouse": "pmwg5rka5t3tt",
     "father": "",
+    "mother": "",
+    "notes": "",
+    "deceased": false
+  },
+  {
+    "id": "pmwhf2020pv7n",
+    "name": "JAYANTHI NAGAIYAH",
+    "gender": "",
+    "birth": "",
+    "death": "",
+    "photo": "",
+    "spouse": "",
+    "father": "pmvnfazwfsr4j",
     "mother": "",
     "notes": "",
     "deceased": false
