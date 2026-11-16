@@ -63,20 +63,17 @@ body.dragging, body.dragging *{cursor:grabbing !important}
 .pinmsg{min-height:20px;color:#9b2c2c;font-size:14px}
 #pinDlg .btns{justify-content:center;margin-top:6px}
 @media (prefers-reduced-motion:reduce){.pin.shake{animation:none}}
-#weather{position:absolute;left:12px;bottom:12px;z-index:5;min-width:170px;max-width:250px;background:rgba(251,252,250,.96);border:1px solid var(--edge);border-left:4px solid var(--brass);border-radius:6px;box-shadow:0 2px 8px rgba(20,40,32,.18);padding:8px 12px;cursor:default}
-#weather[hidden]{display:none}
-#weather .wx-top{display:flex;align-items:center;gap:8px}
-#weather .wx-ico{font-size:24px;line-height:1}
-#weather .wx-temp{font:700 24px Georgia,"Times New Roman",serif;color:var(--forest)}
-#weather .wx-place{font:600 14px "Segoe UI",system-ui,sans-serif;margin-top:2px}
-#weather .wx-desc{font-size:12.5px;color:var(--muted)}
-#weather .wx-exact{margin-top:6px;padding:3px 9px;font-size:12.5px;border-color:var(--forest);color:var(--forest)}
-@media print{#weather{display:none}}
-#greet{position:absolute;top:10px;left:12px;z-index:5;width:max-content;min-width:190px;max-width:min(340px,calc(100% - 300px));background:rgba(251,252,250,.96);border:1px solid var(--edge);border-left:4px solid var(--brass);border-radius:6px;box-shadow:0 2px 8px rgba(20,40,32,.18);padding:9px 14px;cursor:default}
-#greet .g-hello{font:600 21px Georgia,"Times New Roman",serif;color:var(--forest);display:flex;align-items:center;gap:8px}
-#greet .g-ico{font-size:20px;line-height:1}
-#greet .g-wisdom{font:italic 14px/1.4 Georgia,"Times New Roman",serif;color:#4c5d57;margin-top:3px}
-@media (max-width:640px){#greet{max-width:calc(100% - 190px);min-width:0;padding:7px 10px}#greet .g-hello{font-size:17px}#greet .g-wisdom{font-size:12.5px}}
+#where{position:absolute;left:12px;bottom:12px;z-index:5;min-width:160px;max-width:250px;background:rgba(251,252,250,.96);border:1px solid var(--edge);border-left:4px solid var(--brass);border-radius:6px;box-shadow:0 2px 8px rgba(20,40,32,.18);padding:7px 12px;cursor:default}
+#where[hidden]{display:none}
+#where .wp-place{font:600 14px "Segoe UI",system-ui,sans-serif}
+#where .wp-desc{font-size:12px;color:var(--muted);margin-top:1px}
+#where .wp-exact{margin-top:6px;padding:3px 9px;font-size:12px;border-color:var(--forest);color:var(--forest)}
+@media print{#where{display:none}}
+#greet{position:absolute;top:10px;left:12px;z-index:5;width:max-content;min-width:150px;max-width:min(290px,calc(100% - 300px));background:rgba(251,252,250,.96);border:1px solid var(--edge);border-left:4px solid var(--brass);border-radius:6px;box-shadow:0 2px 8px rgba(20,40,32,.18);padding:6px 11px;cursor:default}
+#greet .g-hello{font:600 15px Georgia,"Times New Roman",serif;color:var(--forest);display:flex;align-items:center;gap:6px}
+#greet .g-ico{font-size:14px;line-height:1}
+#greet .g-wisdom{font:italic 12px/1.35 Georgia,"Times New Roman",serif;color:#4c5d57;margin-top:2px}
+@media (max-width:640px){#greet{max-width:calc(100% - 190px);min-width:0;padding:5px 9px}#greet .g-hello{font-size:14px}#greet .g-wisdom{font-size:11.5px}}
 @media print{#greet{box-shadow:none}}
 #viewLabel{font:italic 15px Georgia,serif;opacity:.9;margin-right:6px}
 #stage{position:absolute;left:0;top:0;transform-origin:0 0}
@@ -149,11 +146,10 @@ form .hint{font-size:12px;color:var(--muted);margin-top:2px}
 </header>
 <div id="viewport"><div id="sizer"><div id="stage"><svg id="lines"></svg></div></div><div id="seniors" hidden aria-label="People aged 60 and over"></div>
   <div id="greet" aria-live="polite"><div class="g-hello"><span class="g-ico" aria-hidden="true">🌅</span><span class="g-text">Good Morning</span></div><div class="g-wisdom"></div></div>
-  <div id="weather" hidden aria-live="polite">
-    <div class="wx-top"><span class="wx-ico" aria-hidden="true">⛅</span><span class="wx-temp">--°C</span></div>
-    <div class="wx-place">Finding your location…</div>
-    <div class="wx-desc"></div>
-    <button type="button" class="wx-exact" hidden>Use my exact location</button>
+  <div id="where" hidden aria-live="polite">
+    <div class="wp-place">📍 Finding your location…</div>
+    <div class="wp-desc"></div>
+    <button type="button" class="wp-exact" hidden>Use my exact location</button>
   </div>
 </div>
 <dialog id="dlg"><div class="dlg-body" id="dlgBody"></div></dialog>
@@ -1218,17 +1214,11 @@ async function ensureUnlocked(){
 updateLock();
 
 
-/* ============ LOCAL WEATHER: where the visitor is, and the temperature there ============ */
+/* ============ WHERE THE VISITOR IS (from their internet address, or their device if they allow it) ============ */
 (function(){
-  const box = $("weather"); if(!box) return;
+  const box = $("where"); if(!box) return;
   ["pointerdown", "wheel", "click"].forEach(ev => box.addEventListener(ev, e => e.stopPropagation(), {passive:true}));
-  const CK = "familyTreeWx", TTL = 10 * 60 * 1000;
-  const CODES = {0:["Clear sky","☀️"],1:["Mostly clear","🌤️"],2:["Partly cloudy","⛅"],3:["Cloudy","☁️"],45:["Fog","🌫️"],48:["Fog","🌫️"],
-    51:["Light drizzle","🌦️"],53:["Drizzle","🌦️"],55:["Heavy drizzle","🌧️"],56:["Freezing drizzle","🌧️"],57:["Freezing drizzle","🌧️"],
-    61:["Light rain","🌧️"],63:["Rain","🌧️"],65:["Heavy rain","🌧️"],66:["Freezing rain","🌧️"],67:["Freezing rain","🌧️"],
-    71:["Light snow","🌨️"],73:["Snow","🌨️"],75:["Heavy snow","❄️"],77:["Snow grains","🌨️"],
-    80:["Showers","🌦️"],81:["Rain showers","🌧️"],82:["Heavy showers","⛈️"],85:["Snow showers","🌨️"],86:["Snow showers","🌨️"],
-    95:["Thunderstorm","⛈️"],96:["Thunderstorm, hail","⛈️"],99:["Thunderstorm, hail","⛈️"]};
+  const CK = "familyTreePlace", TTL = 10 * 60 * 1000;
   // The data service may spell Malaysian states in English or Malay; show them the way people in Malaysia write them.
   const STATES = {"federal territory of kuala lumpur":"Kuala Lumpur","wilayah persekutuan kuala lumpur":"Kuala Lumpur","kuala lumpur":"Kuala Lumpur",
     "federal territory of putrajaya":"Putrajaya","wilayah persekutuan putrajaya":"Putrajaya","putrajaya":"Putrajaya",
@@ -1239,18 +1229,20 @@ updateLock();
   const clean = v => String(v || "").trim();
   function placeName(j){
     const country = clean(j.countryName).replace(/\s*\(the\)$/i, "").replace(/^United Kingdom.*/i, "United Kingdom"), cc = clean(j.countryCode).toUpperCase();
+    const my = cc === "MY" || /malaysia/i.test(country);
     let state = clean(j.principalSubdivision), city = clean(j.city) || clean(j.locality);
-    if(cc === "MY" || /malaysia/i.test(country)) state = STATES[state.toLowerCase()] || state;
+    if(my) state = STATES[state.toLowerCase()] || state;
     const parts = [];
     if(city) parts.push(city);
     if(state && state.toLowerCase() !== city.toLowerCase()) parts.push(state);
-    if(!(cc === "MY" || /malaysia/i.test(country)) && country) parts.push(country);
+    if(!my && country) parts.push(country);
     return parts.join(", ") || "Your location";
   }
-  async function getJSON(url){ const r = await fetch(url, {cache:"no-store"}); if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); }
-  const r3 = n => Math.round(n * 1000) / 1000, r2 = n => Math.round(n * 100) / 100;       // coordinates are rounded before they are sent
-  const lookup = (lat, lon) => getJSON("https://api.bigdatacloud.net/data/reverse-geocode-client?localityLanguage=en" + (lat != null ? `&latitude=${r3(lat)}&longitude=${r3(lon)}` : ""));
-  const weather = (lat, lon) => getJSON(`https://api.open-meteo.com/v1/forecast?latitude=${r2(lat)}&longitude=${r2(lon)}&current=temperature_2m,weather_code&timezone=auto`);
+  const r3 = n => Math.round(n * 1000) / 1000;                                   // coordinates are rounded before they are sent
+  async function lookup(lat, lon){
+    const url = "https://api.bigdatacloud.net/data/reverse-geocode-client?localityLanguage=en" + (lat != null ? `&latitude=${r3(lat)}&longitude=${r3(lon)}` : "");
+    const r = await fetch(url, {cache:"no-store"}); if(!r.ok) throw new Error("HTTP " + r.status); return r.json();
+  }
   const position = () => new Promise((res, rej) => {
     if(!navigator.geolocation) return rej(new Error("Location is not available in this browser."));
     navigator.geolocation.getCurrentPosition(p => res({lat:p.coords.latitude, lon:p.coords.longitude}), rej, {timeout:12000, maximumAge:600000});
@@ -1258,21 +1250,17 @@ updateLock();
   let cur = null, note = "";
   function paint(){
     box.hidden = false;
-    if(!cur){ box.querySelector(".wx-place").textContent = "Finding your location…"; return; }
-    const c = CODES[cur.code] || ["", "🌡️"];
-    box.querySelector(".wx-ico").textContent = c[1];
-    box.querySelector(".wx-temp").textContent = Math.round(cur.temp) + "°C";
-    box.querySelector(".wx-place").textContent = cur.place;
-    box.querySelector(".wx-desc").textContent = note || [c[0], cur.exact ? "your exact location" : "approximate location"].filter(Boolean).join(" · ");
-    box.title = cur.exact ? "Based on your device's location" : "Estimated from your internet connection. This can be a different state from where you really are.";
-    box.querySelector(".wx-exact").hidden = cur.exact || !navigator.geolocation;
+    box.querySelector(".wp-place").textContent = cur ? "📍 " + cur.place : "📍 Finding your location…";
+    box.querySelector(".wp-desc").textContent = !cur ? "" : (note || (cur.exact ? "Your exact location" : "Approximate location"));
+    box.title = cur && cur.exact ? "Based on your device's location" : "Estimated from your internet connection. This can be a different state from where you really are.";
+    box.querySelector(".wp-exact").hidden = !cur || cur.exact || !navigator.geolocation;
   }
   async function run(precise){
-    note = ""; 
+    note = "";
     try{
       if(!precise){
         const c = JSON.parse(sessionStorage.getItem(CK) || "null");
-        if(c && Date.now() - c.ts < TTL && (c.exact || !c.wantExact)){ cur = c; paint(); return; }
+        if(c && Date.now() - c.ts < TTL){ cur = c; paint(); return; }
       }
       let pos = null;
       if(precise){
@@ -1280,24 +1268,15 @@ updateLock();
         catch(e){ note = "Location was not shared, so this is approximate."; }
       }
       const g = pos ? await lookup(pos.lat, pos.lon) : await lookup();
-      const lat = pos ? pos.lat : (g.latitude != null ? +g.latitude : g.location && g.location.lat);
-      const lon = pos ? pos.lon : (g.longitude != null ? +g.longitude : g.location && g.location.lon);
-      if(lat == null || lon == null || isNaN(lat) || isNaN(lon)) throw new Error("no coordinates");
-      const w = (await weather(lat, lon)).current;
-      cur = {place:placeName(g), temp:w.temperature_2m, code:w.weather_code, lat, lon, exact:!!pos, ts:Date.now()};
+      cur = {place:placeName(g), exact:!!pos, ts:Date.now()};
       try{ sessionStorage.setItem(CK, JSON.stringify(cur)); }catch(e){}
       paint();
     }catch(e){
-      console.warn("Weather:", e);
-      if(!cur){ box.hidden = true; }                  // nothing to show: stay out of the way
-      else { note = "Could not refresh."; paint(); }
+      console.warn("Location:", e);
+      if(!cur) box.hidden = true;                    // nothing to show: stay out of the way
     }
   }
-  box.querySelector(".wx-exact").onclick = () => { box.querySelector(".wx-desc").textContent = "Asking your device…"; run(true); };
-  setInterval(async () => {                           // keep the temperature fresh while the page stays open
-    if(!cur || document.hidden) return;
-    try{ const w = (await weather(cur.lat, cur.lon)).current; cur.temp = w.temperature_2m; cur.code = w.weather_code; cur.ts = Date.now(); note = ""; paint(); }catch(e){}
-  }, 15 * 60 * 1000);
+  box.querySelector(".wp-exact").onclick = () => { box.querySelector(".wp-desc").textContent = "Asking your device…"; run(true); };
   paint();
   (async () => {                                       // if this visitor already allowed location here, use it straight away
     let granted = false;
@@ -1305,7 +1284,6 @@ updateLock();
     run(granted);
   })();
 })();
-
 
 /* ============ GREETING AND WISDOM OF THE DAY ============ */
 (function(){
