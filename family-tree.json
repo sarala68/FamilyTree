@@ -3632,7 +3632,7 @@
     "gender": "M",
     "birth": "1996-08-25",
     "death": "",
-    "photo": "",
+    "photo": "PICTURE/PARTIBAN BALA.jpeg",
     "spouse": "",
     "father": "pmvoz2lkrcsig",
     "mother": "pmvoz44s6knvg",
@@ -4442,6 +4442,19 @@
     "spouse": "",
     "father": "pmvnfazwfsr4j",
     "mother": "",
+    "notes": "",
+    "deceased": false
+  },
+  {
+    "id": "pmwilbvhennrw",
+    "name": "XY BOY",
+    "gender": "M",
+    "birth": "",
+    "death": "",
+    "photo": "",
+    "spouse": "",
+    "father": "pmvozluukuv0m",
+    "mother": "pmvozjmqgn4bt",
     "notes": "",
     "deceased": false
   }
