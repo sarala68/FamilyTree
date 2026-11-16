@@ -63,12 +63,6 @@ body.dragging, body.dragging *{cursor:grabbing !important}
 .pinmsg{min-height:20px;color:#9b2c2c;font-size:14px}
 #pinDlg .btns{justify-content:center;margin-top:6px}
 @media (prefers-reduced-motion:reduce){.pin.shake{animation:none}}
-#where{position:absolute;left:12px;bottom:12px;z-index:5;min-width:160px;max-width:250px;background:rgba(251,252,250,.96);border:1px solid var(--edge);border-left:4px solid var(--brass);border-radius:6px;box-shadow:0 2px 8px rgba(20,40,32,.18);padding:7px 12px;cursor:default}
-#where[hidden]{display:none}
-#where .wp-place{font:600 14px "Segoe UI",system-ui,sans-serif}
-#where .wp-desc{font-size:12px;color:var(--muted);margin-top:1px}
-#where .wp-exact{margin-top:6px;padding:3px 9px;font-size:12px;border-color:var(--forest);color:var(--forest)}
-@media print{#where{display:none}}
 #greet{position:absolute;top:10px;left:12px;z-index:5;width:max-content;min-width:150px;max-width:min(290px,calc(100% - 300px));background:rgba(251,252,250,.96);border:1px solid var(--edge);border-left:4px solid var(--brass);border-radius:6px;box-shadow:0 2px 8px rgba(20,40,32,.18);padding:6px 11px;cursor:default}
 #greet .g-hello{font:600 15px Georgia,"Times New Roman",serif;color:var(--forest);display:flex;align-items:center;gap:6px}
 #greet .g-ico{font-size:14px;line-height:1}
@@ -146,11 +140,6 @@ form .hint{font-size:12px;color:var(--muted);margin-top:2px}
 </header>
 <div id="viewport"><div id="sizer"><div id="stage"><svg id="lines"></svg></div></div><div id="seniors" hidden aria-label="People aged 60 and over"></div>
   <div id="greet" aria-live="polite"><div class="g-hello"><span class="g-ico" aria-hidden="true">🌅</span><span class="g-text">Good Morning</span></div><div class="g-wisdom"></div></div>
-  <div id="where" hidden aria-live="polite">
-    <div class="wp-place">📍 Finding your location…</div>
-    <div class="wp-desc"></div>
-    <button type="button" class="wp-exact" hidden>Use my exact location</button>
-  </div>
 </div>
 <dialog id="dlg"><div class="dlg-body" id="dlgBody"></div></dialog>
 <dialog id="pinDlg" aria-label="PIN"></dialog>
@@ -1213,77 +1202,6 @@ async function ensureUnlocked(){
 }
 updateLock();
 
-
-/* ============ WHERE THE VISITOR IS (from their internet address, or their device if they allow it) ============ */
-(function(){
-  const box = $("where"); if(!box) return;
-  ["pointerdown", "wheel", "click"].forEach(ev => box.addEventListener(ev, e => e.stopPropagation(), {passive:true}));
-  const CK = "familyTreePlace", TTL = 10 * 60 * 1000;
-  // The data service may spell Malaysian states in English or Malay; show them the way people in Malaysia write them.
-  const STATES = {"federal territory of kuala lumpur":"Kuala Lumpur","wilayah persekutuan kuala lumpur":"Kuala Lumpur","kuala lumpur":"Kuala Lumpur",
-    "federal territory of putrajaya":"Putrajaya","wilayah persekutuan putrajaya":"Putrajaya","putrajaya":"Putrajaya",
-    "federal territory of labuan":"Labuan","wilayah persekutuan labuan":"Labuan","labuan":"Labuan",
-    "malacca":"Melaka","melaka":"Melaka","penang":"Pulau Pinang","pulau pinang":"Pulau Pinang","johore":"Johor","johor":"Johor",
-    "selangor":"Selangor","negeri sembilan":"Negeri Sembilan","perak":"Perak","pahang":"Pahang","terengganu":"Terengganu",
-    "kelantan":"Kelantan","kedah":"Kedah","perlis":"Perlis","sabah":"Sabah","sarawak":"Sarawak"};
-  const clean = v => String(v || "").trim();
-  function placeName(j){
-    const country = clean(j.countryName).replace(/\s*\(the\)$/i, "").replace(/^United Kingdom.*/i, "United Kingdom"), cc = clean(j.countryCode).toUpperCase();
-    const my = cc === "MY" || /malaysia/i.test(country);
-    let state = clean(j.principalSubdivision), city = clean(j.city) || clean(j.locality);
-    if(my) state = STATES[state.toLowerCase()] || state;
-    const parts = [];
-    if(city) parts.push(city);
-    if(state && state.toLowerCase() !== city.toLowerCase()) parts.push(state);
-    if(!my && country) parts.push(country);
-    return parts.join(", ") || "Your location";
-  }
-  const r3 = n => Math.round(n * 1000) / 1000;                                   // coordinates are rounded before they are sent
-  async function lookup(lat, lon){
-    const url = "https://api.bigdatacloud.net/data/reverse-geocode-client?localityLanguage=en" + (lat != null ? `&latitude=${r3(lat)}&longitude=${r3(lon)}` : "");
-    const r = await fetch(url, {cache:"no-store"}); if(!r.ok) throw new Error("HTTP " + r.status); return r.json();
-  }
-  const position = () => new Promise((res, rej) => {
-    if(!navigator.geolocation) return rej(new Error("Location is not available in this browser."));
-    navigator.geolocation.getCurrentPosition(p => res({lat:p.coords.latitude, lon:p.coords.longitude}), rej, {timeout:12000, maximumAge:600000});
-  });
-  let cur = null, note = "";
-  function paint(){
-    box.hidden = false;
-    box.querySelector(".wp-place").textContent = cur ? "📍 " + cur.place : "📍 Finding your location…";
-    box.querySelector(".wp-desc").textContent = !cur ? "" : (note || (cur.exact ? "Your exact location" : "Approximate location"));
-    box.title = cur && cur.exact ? "Based on your device's location" : "Estimated from your internet connection. This can be a different state from where you really are.";
-    box.querySelector(".wp-exact").hidden = !cur || cur.exact || !navigator.geolocation;
-  }
-  async function run(precise){
-    note = "";
-    try{
-      if(!precise){
-        const c = JSON.parse(sessionStorage.getItem(CK) || "null");
-        if(c && Date.now() - c.ts < TTL){ cur = c; paint(); return; }
-      }
-      let pos = null;
-      if(precise){
-        try{ pos = await position(); }
-        catch(e){ note = "Location was not shared, so this is approximate."; }
-      }
-      const g = pos ? await lookup(pos.lat, pos.lon) : await lookup();
-      cur = {place:placeName(g), exact:!!pos, ts:Date.now()};
-      try{ sessionStorage.setItem(CK, JSON.stringify(cur)); }catch(e){}
-      paint();
-    }catch(e){
-      console.warn("Location:", e);
-      if(!cur) box.hidden = true;                    // nothing to show: stay out of the way
-    }
-  }
-  box.querySelector(".wp-exact").onclick = () => { box.querySelector(".wp-desc").textContent = "Asking your device…"; run(true); };
-  paint();
-  (async () => {                                       // if this visitor already allowed location here, use it straight away
-    let granted = false;
-    try{ const q = await navigator.permissions.query({name:"geolocation"}); granted = q.state === "granted"; }catch(e){}
-    run(granted);
-  })();
-})();
 
 /* ============ GREETING AND WISDOM OF THE DAY ============ */
 (function(){
