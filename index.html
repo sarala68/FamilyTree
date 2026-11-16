@@ -63,6 +63,21 @@ body.dragging, body.dragging *{cursor:grabbing !important}
 .pinmsg{min-height:20px;color:#9b2c2c;font-size:14px}
 #pinDlg .btns{justify-content:center;margin-top:6px}
 @media (prefers-reduced-motion:reduce){.pin.shake{animation:none}}
+#weather{position:absolute;left:12px;bottom:12px;z-index:5;min-width:170px;max-width:250px;background:rgba(251,252,250,.96);border:1px solid var(--edge);border-left:4px solid var(--brass);border-radius:6px;box-shadow:0 2px 8px rgba(20,40,32,.18);padding:8px 12px;cursor:default}
+#weather[hidden]{display:none}
+#weather .wx-top{display:flex;align-items:center;gap:8px}
+#weather .wx-ico{font-size:24px;line-height:1}
+#weather .wx-temp{font:700 24px Georgia,"Times New Roman",serif;color:var(--forest)}
+#weather .wx-place{font:600 14px "Segoe UI",system-ui,sans-serif;margin-top:2px}
+#weather .wx-desc{font-size:12.5px;color:var(--muted)}
+#weather .wx-exact{margin-top:6px;padding:3px 9px;font-size:12.5px;border-color:var(--forest);color:var(--forest)}
+@media print{#weather{display:none}}
+#greet{position:absolute;top:10px;left:12px;z-index:5;width:max-content;min-width:190px;max-width:min(340px,calc(100% - 300px));background:rgba(251,252,250,.96);border:1px solid var(--edge);border-left:4px solid var(--brass);border-radius:6px;box-shadow:0 2px 8px rgba(20,40,32,.18);padding:9px 14px;cursor:default}
+#greet .g-hello{font:600 21px Georgia,"Times New Roman",serif;color:var(--forest);display:flex;align-items:center;gap:8px}
+#greet .g-ico{font-size:20px;line-height:1}
+#greet .g-wisdom{font:italic 14px/1.4 Georgia,"Times New Roman",serif;color:#4c5d57;margin-top:3px}
+@media (max-width:640px){#greet{max-width:calc(100% - 190px);min-width:0;padding:7px 10px}#greet .g-hello{font-size:17px}#greet .g-wisdom{font-size:12.5px}}
+@media print{#greet{box-shadow:none}}
 #viewLabel{font:italic 15px Georgia,serif;opacity:.9;margin-right:6px}
 #stage{position:absolute;left:0;top:0;transform-origin:0 0}
 svg#lines{position:absolute;left:0;top:0;pointer-events:none}
@@ -132,7 +147,15 @@ form .hint{font-size:12px;color:var(--muted);margin-top:2px}
   <button id="btnPrint">Print</button>
   <input type="file" id="file" accept=".json,application/json" hidden>
 </header>
-<div id="viewport"><div id="sizer"><div id="stage"><svg id="lines"></svg></div></div><div id="seniors" hidden aria-label="People aged 60 and over"></div></div>
+<div id="viewport"><div id="sizer"><div id="stage"><svg id="lines"></svg></div></div><div id="seniors" hidden aria-label="People aged 60 and over"></div>
+  <div id="greet" aria-live="polite"><div class="g-hello"><span class="g-ico" aria-hidden="true">🌅</span><span class="g-text">Good Morning</span></div><div class="g-wisdom"></div></div>
+  <div id="weather" hidden aria-live="polite">
+    <div class="wx-top"><span class="wx-ico" aria-hidden="true">⛅</span><span class="wx-temp">--°C</span></div>
+    <div class="wx-place">Finding your location…</div>
+    <div class="wx-desc"></div>
+    <button type="button" class="wx-exact" hidden>Use my exact location</button>
+  </div>
+</div>
 <dialog id="dlg"><div class="dlg-body" id="dlgBody"></div></dialog>
 <dialog id="pinDlg" aria-label="PIN"></dialog>
 
@@ -1193,6 +1216,522 @@ async function ensureUnlocked(){
   unlockedUntil = Date.now() + IDLE_MS; updateLock(); return true;
 }
 updateLock();
+
+
+/* ============ LOCAL WEATHER: where the visitor is, and the temperature there ============ */
+(function(){
+  const box = $("weather"); if(!box) return;
+  ["pointerdown", "wheel", "click"].forEach(ev => box.addEventListener(ev, e => e.stopPropagation(), {passive:true}));
+  const CK = "familyTreeWx", TTL = 10 * 60 * 1000;
+  const CODES = {0:["Clear sky","☀️"],1:["Mostly clear","🌤️"],2:["Partly cloudy","⛅"],3:["Cloudy","☁️"],45:["Fog","🌫️"],48:["Fog","🌫️"],
+    51:["Light drizzle","🌦️"],53:["Drizzle","🌦️"],55:["Heavy drizzle","🌧️"],56:["Freezing drizzle","🌧️"],57:["Freezing drizzle","🌧️"],
+    61:["Light rain","🌧️"],63:["Rain","🌧️"],65:["Heavy rain","🌧️"],66:["Freezing rain","🌧️"],67:["Freezing rain","🌧️"],
+    71:["Light snow","🌨️"],73:["Snow","🌨️"],75:["Heavy snow","❄️"],77:["Snow grains","🌨️"],
+    80:["Showers","🌦️"],81:["Rain showers","🌧️"],82:["Heavy showers","⛈️"],85:["Snow showers","🌨️"],86:["Snow showers","🌨️"],
+    95:["Thunderstorm","⛈️"],96:["Thunderstorm, hail","⛈️"],99:["Thunderstorm, hail","⛈️"]};
+  // The data service may spell Malaysian states in English or Malay; show them the way people in Malaysia write them.
+  const STATES = {"federal territory of kuala lumpur":"Kuala Lumpur","wilayah persekutuan kuala lumpur":"Kuala Lumpur","kuala lumpur":"Kuala Lumpur",
+    "federal territory of putrajaya":"Putrajaya","wilayah persekutuan putrajaya":"Putrajaya","putrajaya":"Putrajaya",
+    "federal territory of labuan":"Labuan","wilayah persekutuan labuan":"Labuan","labuan":"Labuan",
+    "malacca":"Melaka","melaka":"Melaka","penang":"Pulau Pinang","pulau pinang":"Pulau Pinang","johore":"Johor","johor":"Johor",
+    "selangor":"Selangor","negeri sembilan":"Negeri Sembilan","perak":"Perak","pahang":"Pahang","terengganu":"Terengganu",
+    "kelantan":"Kelantan","kedah":"Kedah","perlis":"Perlis","sabah":"Sabah","sarawak":"Sarawak"};
+  const clean = v => String(v || "").trim();
+  function placeName(j){
+    const country = clean(j.countryName).replace(/\s*\(the\)$/i, "").replace(/^United Kingdom.*/i, "United Kingdom"), cc = clean(j.countryCode).toUpperCase();
+    let state = clean(j.principalSubdivision), city = clean(j.city) || clean(j.locality);
+    if(cc === "MY" || /malaysia/i.test(country)) state = STATES[state.toLowerCase()] || state;
+    const parts = [];
+    if(city) parts.push(city);
+    if(state && state.toLowerCase() !== city.toLowerCase()) parts.push(state);
+    if(!(cc === "MY" || /malaysia/i.test(country)) && country) parts.push(country);
+    return parts.join(", ") || "Your location";
+  }
+  async function getJSON(url){ const r = await fetch(url, {cache:"no-store"}); if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); }
+  const r3 = n => Math.round(n * 1000) / 1000, r2 = n => Math.round(n * 100) / 100;       // coordinates are rounded before they are sent
+  const lookup = (lat, lon) => getJSON("https://api.bigdatacloud.net/data/reverse-geocode-client?localityLanguage=en" + (lat != null ? `&latitude=${r3(lat)}&longitude=${r3(lon)}` : ""));
+  const weather = (lat, lon) => getJSON(`https://api.open-meteo.com/v1/forecast?latitude=${r2(lat)}&longitude=${r2(lon)}&current=temperature_2m,weather_code&timezone=auto`);
+  const position = () => new Promise((res, rej) => {
+    if(!navigator.geolocation) return rej(new Error("Location is not available in this browser."));
+    navigator.geolocation.getCurrentPosition(p => res({lat:p.coords.latitude, lon:p.coords.longitude}), rej, {timeout:12000, maximumAge:600000});
+  });
+  let cur = null, note = "";
+  function paint(){
+    box.hidden = false;
+    if(!cur){ box.querySelector(".wx-place").textContent = "Finding your location…"; return; }
+    const c = CODES[cur.code] || ["", "🌡️"];
+    box.querySelector(".wx-ico").textContent = c[1];
+    box.querySelector(".wx-temp").textContent = Math.round(cur.temp) + "°C";
+    box.querySelector(".wx-place").textContent = cur.place;
+    box.querySelector(".wx-desc").textContent = note || [c[0], cur.exact ? "your exact location" : "approximate location"].filter(Boolean).join(" · ");
+    box.title = cur.exact ? "Based on your device's location" : "Estimated from your internet connection. This can be a different state from where you really are.";
+    box.querySelector(".wx-exact").hidden = cur.exact || !navigator.geolocation;
+  }
+  async function run(precise){
+    note = ""; 
+    try{
+      if(!precise){
+        const c = JSON.parse(sessionStorage.getItem(CK) || "null");
+        if(c && Date.now() - c.ts < TTL && (c.exact || !c.wantExact)){ cur = c; paint(); return; }
+      }
+      let pos = null;
+      if(precise){
+        try{ pos = await position(); }
+        catch(e){ note = "Location was not shared, so this is approximate."; }
+      }
+      const g = pos ? await lookup(pos.lat, pos.lon) : await lookup();
+      const lat = pos ? pos.lat : (g.latitude != null ? +g.latitude : g.location && g.location.lat);
+      const lon = pos ? pos.lon : (g.longitude != null ? +g.longitude : g.location && g.location.lon);
+      if(lat == null || lon == null || isNaN(lat) || isNaN(lon)) throw new Error("no coordinates");
+      const w = (await weather(lat, lon)).current;
+      cur = {place:placeName(g), temp:w.temperature_2m, code:w.weather_code, lat, lon, exact:!!pos, ts:Date.now()};
+      try{ sessionStorage.setItem(CK, JSON.stringify(cur)); }catch(e){}
+      paint();
+    }catch(e){
+      console.warn("Weather:", e);
+      if(!cur){ box.hidden = true; }                  // nothing to show: stay out of the way
+      else { note = "Could not refresh."; paint(); }
+    }
+  }
+  box.querySelector(".wx-exact").onclick = () => { box.querySelector(".wx-desc").textContent = "Asking your device…"; run(true); };
+  setInterval(async () => {                           // keep the temperature fresh while the page stays open
+    if(!cur || document.hidden) return;
+    try{ const w = (await weather(cur.lat, cur.lon)).current; cur.temp = w.temperature_2m; cur.code = w.weather_code; cur.ts = Date.now(); note = ""; paint(); }catch(e){}
+  }, 15 * 60 * 1000);
+  paint();
+  (async () => {                                       // if this visitor already allowed location here, use it straight away
+    let granted = false;
+    try{ const q = await navigator.permissions.query({name:"geolocation"}); granted = q.state === "granted"; }catch(e){}
+    run(granted);
+  })();
+})();
+
+
+/* ============ GREETING AND WISDOM OF THE DAY ============ */
+(function(){
+  const box = $("greet"); if(!box) return;
+  ["pointerdown", "wheel", "click"].forEach(ev => box.addEventListener(ev, e => e.stopPropagation(), {passive:true}));
+  // One saying per day, in a fixed order, so no saying repeats until the whole list has been used (nearly 14 months).
+  // To add more, put new lines at the END of the list.
+  const WISDOM = [
+  "Honest dealings build lasting business.",
+  "Experience is a hard teacher: it gives the test first, then the lesson.",
+  "Persistence is quiet courage that keeps showing up.",
+  "Peace of mind is the best vitamin.",
+  "Today's choices are tomorrow's memories.",
+  "Silence is sometimes the best answer.",
+  "Each day is a blank page; write something kind.",
+  "Small traditions make big memories.",
+  "Leave a place cleaner than you found it.",
+  "Every flower blooms in its own time.",
+  "Do your work well, and the work will speak for you.",
+  "Visit a friend in need; presence beats presents.",
+  "The road to anything worthwhile is rarely straight.",
+  "Every generation stands on the shoulders of the one before.",
+  "Skill is built through repetition and care.",
+  "Do not argue with fools; they will drag you down to their level.",
+  "Yesterday is gone; tomorrow is a promise; today is the gift.",
+  "One brick at a time still builds a castle.",
+  "A shared burden is half a burden.",
+  "A village raises a child, and a child raises a village's hope.",
+  "Speak gently at home; it is where words land softest and hurt deepest.",
+  "Not every day will be good, but something good is in every day.",
+  "Put down the phone and look into someone's eyes.",
+  "Sit under a tree and let your worries fall like leaves.",
+  "A peaceful heart is better than a full purse.",
+  "A friend in need is a friend indeed.",
+  "Value what you have before time reminds you to.",
+  "Enjoy the little things; one day you will look back and see they were big.",
+  "May today bring you peace, and may you pass it on.",
+  "Peace in the world begins at your own front door.",
+  "Ask questions; the fool is the one who never asks.",
+  "Trust yourself: you have survived every day so far.",
+  "Evening is a good time to forgive the day.",
+  "Check on your health before it checks on you.",
+  "Say thank you in a way that is felt, not just heard.",
+  "Mistakes are proof that you are trying.",
+  "Be gentle with people; you never see the battles they carry.",
+  "True friends celebrate your joy and share your sorrow.",
+  "Treat strangers as you would treat family.",
+  "The best inheritance is a good name and a kind heart.",
+  "Teach what you know; learn what you teach.",
+  "Call old friends; the years never break a real bond.",
+  "Little by little, knowledge fills the cup.",
+  "Do right even when it is hard.",
+  "Spend less than you earn and the rest takes care of itself.",
+  "Say sorry before the sun sets; pride keeps no one warm.",
+  "The kindest thing you can give a child is your undivided attention.",
+  "Honesty is a gift you give yourself first.",
+  "An open mind is the best education.",
+  "Wait for the right moment, but prepare during the wait.",
+  "Growing old is mandatory; growing wise is optional.",
+  "A house is made of walls; a home is made of people.",
+  "Wake early, greet the sun, and begin gently.",
+  "Brothers and sisters are the first friends you never had to choose.",
+  "To teach is to learn twice.",
+  "Teach by example.",
+  "Stay hopeful; the best chapters are often yet to come.",
+  "Honour your parents while you can still hear their voices.",
+  "Stretch your body and your mind a little each day.",
+  "Water the garden you have, not the one you dream about.",
+  "Begin where you stand, with what you hold.",
+  "Be loyal to those who are loyal to you.",
+  "Character is what you do when no one is watching.",
+  "A promise made is a debt owed.",
+  "Be thankful for what you have; it may be what someone else is wishing for.",
+  "Make decisions with your head, deliver them with your heart.",
+  "Be grateful for the people who make your life easier, and tell them so.",
+  "Work hard, rest well, love deeply.",
+  "The best way to cheer yourself up is to cheer someone else up.",
+  "Do not wait for the storm to pass; learn to dance in the rain.",
+  "Breathe in calm; breathe out worry.",
+  "A healthy habit today is a gift to your old age.",
+  "Own your mistakes; it is the shortest road to respect.",
+  "Hope is the seed; action is the water.",
+  "Today's hard work is tomorrow's ease.",
+  "Choose understanding over winning.",
+  "Admit what you do not know; it is how learning begins.",
+  "Slow down; you are not late for your own life.",
+  "Gratitude turns what we have into enough.",
+  "Wisdom is gathering lessons and passing them on.",
+  "Do not fear hard work; fear wasted talent.",
+  "Laughter is good medicine for the heart.",
+  "Speak only if it improves on silence.",
+  "A calm mind is the best medicine for a tired body.",
+  "A storm passes; the sun returns.",
+  "Community is built by showing up.",
+  "Gossip travels fast; kindness arrives slowly but stays longer.",
+  "Mind your manners; they are the doorway to people's hearts.",
+  "A balanced life holds work, rest, and play.",
+  "The sea teaches patience; the mountain teaches strength.",
+  "Visit the sick, comfort the old, welcome the young; that is what family is for.",
+  "Change is the only constant; adapt with grace.",
+  "Speak well of those who are absent.",
+  "Little acts of care are the threads that hold a family together.",
+  "Believe there is good in the world, and help it grow.",
+  "Take care of your body; it is the only place you have to live.",
+  "Enough is a feast.",
+  "Truth spoken kindly is the best medicine.",
+  "A kind word at breakfast can brighten the whole day.",
+  "Courage is not the absence of fear but acting in spite of it.",
+  "Count what you have, not what you lack.",
+  "What matters most is rarely urgent.",
+  "A soft answer turns away anger.",
+  "Every sunrise is an invitation to try again.",
+  "Do not postpone joy.",
+  "Make the most of the morning; it sets the tune for the day.",
+  "Read a little every day; it adds up to a library of the mind.",
+  "Every elder is a doorway to the past; ask them to open it.",
+  "A mother's patience and a father's example are the best school.",
+  "Do small things with great love.",
+  "Many hands make light work.",
+  "Moments pass quickly; make them memories.",
+  "Drink water, breathe deeply, rest well.",
+  "Be quick to listen, slow to speak, and slower to anger.",
+  "Share what you have; a full table feeds all.",
+  "A tool is only as good as the care you give it.",
+  "Help your neighbour and you help yourself.",
+  "Treat everyone with respect, from the king to the cleaner.",
+  "Small efforts repeated daily become great achievements.",
+  "A little encouragement can change someone's whole year.",
+  "Hold your loved ones a little longer today.",
+  "The secret of happiness is wanting what you have.",
+  "A hug costs nothing and is worth everything.",
+  "Be a student of life until your last breath.",
+  "Focus on one thing at a time and finish it.",
+  "Worry steals sleep; gratitude returns it.",
+  "A grateful heart finds something to celebrate in every day.",
+  "Learn to wait without complaining; time is working for you.",
+  "The best things in life are free: sunrises, laughter, love.",
+  "Be generous with praise and careful with criticism.",
+  "Anger is a wind that blows out the lamp of the mind.",
+  "Understanding grows when you stay quiet long enough to hear.",
+  "Keep learning from your children; they see the world fresh.",
+  "It is not what you earn but what you keep and give that counts.",
+  "Sharpen your skills in quiet; show them when needed.",
+  "Be where your feet are.",
+  "Wisdom is knowing what to overlook.",
+  "Life is short; spend it with people who make it feel long.",
+  "Endurance turns ordinary people into extraordinary ones.",
+  "Wellbeing starts with saying no to what drains you.",
+  "Keep your eyes open and your opinions loosely held.",
+  "A good reputation takes years to build and a moment to lose.",
+  "Save a little today; tomorrow will thank you.",
+  "A person's worth shows in how they treat those who can do nothing for them.",
+  "Old photographs remind us how quickly the years pass; hold your loved ones close.",
+  "A friend's door is never closed.",
+  "A cup of coffee in quiet is a small holiday.",
+  "The greatest wealth is a clear conscience.",
+  "Tough times do not last, but steady people do.",
+  "Facts tell, stories teach.",
+  "A tidy desk is a tidy mind; start small.",
+  "Say hello to someone who looks lonely today.",
+  "Marriage is two people choosing each other again every morning.",
+  "Do not let the fear of failing keep you from trying.",
+  "Be like water: patient, yielding, and impossible to stop.",
+  "A life well lived is a letter to the future.",
+  "Pay your debts, and you will sleep soundly.",
+  "A word of thanks can make someone's week.",
+  "Do not wish for more hours; use the ones you have.",
+  "It is fine to rest; it is not fine to quit.",
+  "Sunsets are daily reminders that endings can be beautiful.",
+  "Keep life simple; most of what weighs us down was optional.",
+  "End each day by counting three good things.",
+  "The morning air is free medicine.",
+  "Do not fear going slowly; fear standing still.",
+  "Doubt is the beginning of wisdom.",
+  "What you water grows; water your good habits.",
+  "A family tree grows strong when its roots are watered with care.",
+  "Listen to the rain; it knows how to be gentle.",
+  "Spend your minutes like coins you cannot earn again.",
+  "Where there is a will, there is a way.",
+  "Switch off for an hour and tune in to life.",
+  "Be proud of your roots and generous with your branches.",
+  "Be the neighbour you wish you had.",
+  "The more you give, the more you have to give.",
+  "Rest is not laziness; it is how strength returns.",
+  "Pride puts up walls; humility opens doors.",
+  "A little help at the right time is worth a lot.",
+  "The wise build bridges; the foolish build walls.",
+  "A good night's sleep is the cheapest medicine.",
+  "A grateful heart is a magnet for good things.",
+  "Slow progress is still progress.",
+  "Smile at the morning; it smiles back.",
+  "Life is a gift; unwrap it daily.",
+  "The best time to plant a tree was twenty years ago; the second best is today.",
+  "Live so that you would not mind your life being read aloud.",
+  "Ask your relatives about their lives; each one has a story worth hearing.",
+  "Wisdom is not having all the answers but asking the right question.",
+  "Time is the only wealth that cannot be saved, only spent wisely.",
+  "Kindness is a language the deaf can hear and the blind can see.",
+  "A little courtesy goes a long way on a crowded road.",
+  "Humility is not thinking less of yourself, but thinking of yourself less.",
+  "Money is a good servant but a poor master.",
+  "Make peace with your past so it does not ruin your present.",
+  "Discuss ideas, not people.",
+  "Respect at home is the root of respect everywhere.",
+  "Be the person your dog thinks you are.",
+  "Morning sunlight is a free tonic.",
+  "Do not judge a person by their clothes, but by their kindness.",
+  "Be the reason your family feels safe.",
+  "Keep your promises to your family first.",
+  "A clear head makes a lighter heart.",
+  "A united family can weather any storm.",
+  "Listen to your elders; they have already walked the road ahead of you.",
+  "What you do for others echoes long after you are gone.",
+  "Hope looks at the stars while keeping its feet on the ground.",
+  "A new day is a new chance.",
+  "Happy families are not perfect; they simply keep trying.",
+  "Teaching is the greatest gift an elder can give.",
+  "Celebrate the little wins.",
+  "Forgive others; it frees your own hands.",
+  "Change your thoughts, and you change your world.",
+  "Give without expecting; receive without forgetting.",
+  "Share the credit and you will never run out of helpers.",
+  "Peace is not found; it is practised.",
+  "Fools rush; the wise prepare.",
+  "A family photo is a window to love; frame it.",
+  "Patience is bitter, but its fruit is sweet.",
+  "Good company makes a long road short.",
+  "Courtesy costs nothing and buys everything.",
+  "The family that laughs and forgives together grows together.",
+  "The trees do not rush, yet they reach the sky.",
+  "Years teach what days never can.",
+  "A wise person changes their mind; a fool never does.",
+  "Dream big, but begin small.",
+  "A walk each day keeps worries away.",
+  "Be present at the table; screens can wait.",
+  "Be the calm in someone else's storm.",
+  "Every ending is just a quiet beginning.",
+  "Success is a ladder; take it one rung at a time.",
+  "Simple pleasures are the real luxuries.",
+  "A family's strength is measured by how it treats its weakest member.",
+  "The future belongs to those who prepare for it today.",
+  "Knowledge speaks; wisdom listens.",
+  "A day without laughter is a day wasted.",
+  "Be early, be honest, be useful.",
+  "A person who stops learning starts ageing.",
+  "Rest well tonight; tomorrow the world needs your best self.",
+  "A good beginning makes a good ending.",
+  "Wisdom begins with listening.",
+  "A good name is better than great riches.",
+  "Carry yourself with dignity and others will follow.",
+  "Drive carefully; someone is waiting for you at home.",
+  "Generosity is giving what you could easily keep.",
+  "Greet people with a smile; the whole street feels lighter.",
+  "Every book you open is a door you walk through.",
+  "The more you learn, the more you realise how little you know.",
+  "When you feel like stopping, remember why you started.",
+  "Appreciate the everyday; it is the heart of happiness.",
+  "Time heals, but kindness helps while you wait.",
+  "Take responsibility for your own happiness.",
+  "Call someone you love today; time with family is never wasted.",
+  "Listen with your eyes as well as your ears.",
+  "Home is not a place; it is the people who make you feel welcome.",
+  "Hurry makes mistakes; patience makes masterpieces.",
+  "Plant kindness; harvest friendship.",
+  "Rivers carve mountains by never giving up.",
+  "Begin; the rest of the work becomes easier.",
+  "A home is built from small kindnesses, one day at a time.",
+  "Hard times are the roots of strong character.",
+  "Love at home is spelled T-I-M-E.",
+  "Nothing is lost by courtesy.",
+  "A steady drip wears away the hardest stone.",
+  "Honest work is its own reward.",
+  "Keep your word as if it were gold.",
+  "The tree that bends in the storm is the one that survives.",
+  "A tidy mind is a powerful tool.",
+  "Be still, and the answer often arrives.",
+  "Clocks measure hours; memories measure life.",
+  "Keep your family's name clean; it is the one gift you pass on without a word.",
+  "A kind community starts with one kind person.",
+  "A candle loses nothing by lighting another.",
+  "A true friend tells you the truth and stays afterwards.",
+  "A satisfied customer is the best advertisement.",
+  "Quiet the mind and the heart will speak.",
+  "Delight in the small blessings and the large ones will follow.",
+  "Fix a small problem today; avoid a big one tomorrow.",
+  "Think before you post; words travel far.",
+  "Make room for something good to arrive.",
+  "Take a deep breath; most problems look smaller from a calm place.",
+  "Let go of what you cannot change; hold on to what you can.",
+  "Teach your children to say thank you, and they will always feel rich.",
+  "Teamwork turns small hands into great hands.",
+  "Be glad for small victories; they build the big ones.",
+  "Notice one beautiful thing today.",
+  "A good tradesman is known by a tidy workshop.",
+  "Wake with gratitude and the day starts brighter.",
+  "Life's best things are rarely things.",
+  "Light a candle for someone else, and your own path grows brighter.",
+  "Be curious, not judgmental.",
+  "A cup of tea shared is a moment well spent.",
+  "Be generous today; someone is struggling quietly.",
+  "Let the day's end be softer than its beginning.",
+  "A smile is the cheapest way to improve your face and someone else's day.",
+  "Gratitude makes a small home feel like a palace.",
+  "Children learn more from what you do than from what you say.",
+  "Count your blessings before counting your worries.",
+  "Health is the crown that only the sick can see.",
+  "Do not wait for a perfect moment to do a good deed.",
+  "Debt is a heavy bag; carry as little as possible.",
+  "Trust is built in drops and lost in buckets.",
+  "Check on the elderly in your neighbourhood today.",
+  "Do not compare your path with another's; every journey has its own weather.",
+  "Give your best and let go of the rest.",
+  "Eat slowly, chew well, and give thanks for the meal.",
+  "Learn something new today, even if it is small.",
+  "You are stronger than you think and braver than you feel.",
+  "Treat every day as a fresh start.",
+  "Be brave enough to start again.",
+  "Invite someone new to your table.",
+  "Every business grows on trust.",
+  "A seed does not see the tree it will become; trust the process.",
+  "Do not waste today worrying about tomorrow.",
+  "Happiness is often hiding in the ordinary.",
+  "Welcome guests with warm hearts and open hands.",
+  "Contentment is the greatest wealth.",
+  "A job done well needs no apology.",
+  "Plant good seeds in young minds.",
+  "Let your joy be louder than your worries.",
+  "Share your stories; one day they become your family's treasure.",
+  "Do not count the days; make the days count.",
+  "Your story matters; share it with your children.",
+  "Hold on to hope; it carries you farther than luck.",
+  "Walk slowly; you will see more.",
+  "Fresh air, warm food, loving company: what more is needed?",
+  "Say \"I love you\" while there is time.",
+  "Say thank you more often than sorry.",
+  "Do one brave thing today.",
+  "Start your morning with a thankful thought.",
+  "Choose today what you want to be remembered for.",
+  "Cheerfulness is the sunshine of the heart.",
+  "Remember the people who helped you when you had little.",
+  "Keep your heart soft and your boundaries clear.",
+  "A kind heart is the best compass.",
+  "Quiet moments are a gift; accept them.",
+  "Quality is remembered long after the price is forgotten.",
+  "Fall seven times, stand up eight.",
+  "Peace is found in the pause.",
+  "Opportunities hide inside difficulties.",
+  "Friends are the family we choose.",
+  "A short pencil is better than a long memory.",
+  "Rain on the roof today waters the garden tomorrow.",
+  "Treat your customers like family and they will become family.",
+  "Fair prices and fair words make fair friends.",
+  "The best teacher is the one who makes you think.",
+  "Learn the rules so you know which ones to bend kindly.",
+  "Grandparents are a family's living library; visit often.",
+  "Strength is built one gentle habit at a time.",
+  "Mountains are climbed one step at a time.",
+  "A clean home and a clear mind help each other.",
+  "Courage is taking the next step while still afraid.",
+  "Be generous with your time to those who are just starting out.",
+  "Compare yourself only with who you were yesterday.",
+  "Cherish the ordinary; it is where life mostly lives.",
+  "Every great journey begins with a decision.",
+  "Never be ashamed of a scar; it means you survived.",
+  "Every expert was once a beginner who refused to quit.",
+  "Learn from every person you meet.",
+  "Where there is love in the home, there is light in every room.",
+  "Walk in the garden; worries wilt among flowers.",
+  "Remember where you came from, and help others along the way.",
+  "Think big, start small, finish what you begin.",
+  "Look at the problem long enough and the answer appears.",
+  "Think twice, speak once.",
+  "The present is the only place where life really happens.",
+  "Judge less, understand more.",
+  "Wealth fades; goodness lasts.",
+  "Move a little every day; your future self will thank you.",
+  "Be gentle with the earth; it is the only home we share.",
+  "Mistakes teach, regrets weigh; learn and move on.",
+  "Plant something and watch patience grow.",
+  "A family that shares a meal shares its heart.",
+  "Never stop improving what you offer.",
+  "A calm mind sees what a hurried mind misses.",
+  "The days are long, but the years are short; cherish both.",
+  "The night is darkest just before the dawn.",
+  "A small step taken today beats a big plan kept for tomorrow.",
+  "Keep old friends; they are mirrors of who you were.",
+  "Family is where everyone gets another chance.",
+  "Look back with gratitude, forward with hope, around with love.",
+  "Plan your work and work your plan.",
+  "Neighbours who greet each other build a village.",
+  "Joy grows when you share it.",
+  "A kind message can reach where you cannot.",
+  "Believe in yourself, even when no one else does.",
+  "Fortune favours those who try.",
+  "Diligence is the mother of good luck.",
+  "Take the first step in trust that the path will appear.",
+  "Unity is strength; division is weakness.",
+  "Lend a hand; it will return in time.",
+  "Respect is earned by giving it first.",
+  "Failure is only a lesson wearing a disguise.",
+  "Take time to look up at the stars.",
+  "A thankful person is never poor.",
+  "Happiness is a habit; practise it daily.",
+  "Mind and body are one house; keep both tidy.",
+  "A diamond is just coal that handled pressure well."
+  ];
+  const EPOCH = Date.UTC(2026, 0, 1) / 86400000;
+  function greeting(h){
+    if(h >= 5 && h < 12) return ["Good Morning", "🌅"];
+    if(h >= 12 && h < 17) return ["Good Afternoon", "☀️"];
+    if(h >= 17 && h < 21) return ["Good Evening", "🌇"];
+    return ["Good Night", "🌙"];
+  }
+  function show(){
+    const now = new Date();
+    const g = greeting(now.getHours());
+    box.querySelector(".g-ico").textContent = g[1];
+    box.querySelector(".g-text").textContent = g[0];
+    const day = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000) - EPOCH;   // the visitor's own calendar day
+    const i = ((day % WISDOM.length) + WISDOM.length) % WISDOM.length;
+    box.querySelector(".g-wisdom").textContent = WISDOM[i];
+  }
+  show();
+  setInterval(show, 60 * 1000);                     // keeps the greeting right as the day goes by, and switches the saying at midnight
+  window.__greet = {show, count:WISDOM.length};
+})();
 
 /* ============ STARTUP ============ */
 /* family-tree.json in the repository is the master copy.
