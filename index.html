@@ -74,6 +74,13 @@ body.dragging, body.dragging *{cursor:grabbing !important}
 .fblink{display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 6px;border-radius:999px;background:#1877f2;color:#fff;text-decoration:none;font:600 14px "Segoe UI",system-ui,sans-serif}
 .fblink:hover{background:#1466d1}
 .fbi{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#fff;color:#1877f2;font:700 16px Georgia,serif}
+#tip{position:fixed;z-index:10000;pointer-events:none;background:var(--forest);color:#fff;font:600 13px "Segoe UI",system-ui,sans-serif;letter-spacing:.3px;padding:5px 14px;border-radius:999px;box-shadow:0 3px 10px rgba(0,0,0,.3);border:1px solid var(--brass);white-space:nowrap;transform:translate(-50%,-100%)}
+#tip[hidden]{display:none}
+#tip::after{content:"";position:absolute;left:50%;bottom:-6px;width:10px;height:10px;background:var(--forest);border-right:1px solid var(--brass);border-bottom:1px solid var(--brass);transform:translateX(-50%) rotate(45deg)}
+#tip.below{transform:translate(-50%,0)}
+#tip.below::after{bottom:auto;top:-6px;border:0;border-left:1px solid var(--brass);border-top:1px solid var(--brass)}
+.rolerow{text-align:center;margin:-2px 0 6px}
+.rolebadge{display:inline-block;padding:2px 12px;border-radius:999px;background:var(--brass);color:#1b1608;font:700 12px "Segoe UI",system-ui,sans-serif;letter-spacing:.4px;text-transform:uppercase}
 #viewLabel{font:italic 15px Georgia,serif;opacity:.9;margin-right:6px}
 #stage{position:absolute;left:0;top:0;transform-origin:0 0}
 svg#lines{position:absolute;left:0;top:0;pointer-events:none}
@@ -147,6 +154,7 @@ form .hint{font-size:12px;color:var(--muted);margin-top:2px}
   <div id="greet" aria-live="polite"><div class="g-hello"><span class="g-ico" aria-hidden="true">🌅</span><span class="g-text">Good Morning</span></div><div class="g-wisdom"></div></div>
   <div id="credit">Designed and Developed by Bob</div>
 </div>
+<div id="tip" role="tooltip" hidden></div>
 <dialog id="dlg"><div class="dlg-body" id="dlgBody"></div></dialog>
 <dialog id="pinDlg" aria-label="PIN"></dialog>
 
@@ -562,6 +570,7 @@ function drawTree(){
   L.cards.forEach(({p, x, y}) => {
     const c = document.createElement("div");
     c.className = "card " + (p.gender || "") + (p.id === focusId ? " focus" : "");
+    { const role = roleOf(p); if(role) c.dataset.role = role; }
     c.style.left = x + "px"; c.style.top = y + "px";
     c.tabIndex = 0; c.dataset.id = p.id; c.setAttribute("role", "button");
     c.appendChild(avatar(p, 96));
@@ -660,6 +669,8 @@ function centerOn(c){
 })();
 
 /* ---- focus view: one person's immediate family ---- */
+// Titles shown when you point at someone. Daniel Jeyakumar is the founder.
+function roleOf(p){ return p && p.id === homeId() ? "Founder" : ""; }
 function homeId(){
   const d = people.find(p => /daniel/i.test(p.name || "") && /jeyakumar/i.test(p.name || ""));
   return d ? d.id : null;
@@ -725,7 +736,7 @@ function showPerson(id){
   const group = (label, list) => `<div class="rel"><b>${label}</b><span class="chips">${
     list.length ? list.map(r => `<button type="button" class="chip" data-go="${esc(r.id)}"><span class="mini" data-av="${esc(r.id)}"></span><span>${esc(r.name || "Unnamed")}</span></button>`).join("")
                 : `<span class="none">None yet</span>`}</span></div>`;
-  body.innerHTML = `<div id="big"></div><h2>${esc(p.name || "Unnamed")}</h2><div class="sub">${esc(dates(p))}</div>
+  body.innerHTML = `<div id="big"></div><h2>${esc(p.name || "Unnamed")}</h2>${roleOf(p) ? `<div class="rolerow"><span class="rolebadge">${esc(roleOf(p))}</span></div>` : ""}<div class="sub">${esc(dates(p))}</div>
     ${p.fb ? `<div class="fbrow"><a class="fblink" href="${esc(p.fb)}" target="_blank" rel="noopener noreferrer"><span class="fbi" aria-hidden="true">f</span>Facebook profile</a></div>` : ""}
     ${group("Parents", parents)}${group("Siblings", siblings)}${group("Spouse", spouse ? [spouse] : [])}${group("Children", kids)}
     ${p.notes ? `<div class="notes">${esc(p.notes)}</div>` : ""}
@@ -1138,6 +1149,24 @@ async function ensureUnlocked(){
 updateLock();
 
 
+/* ============ POINT-AT TITLE (e.g. "Founder") ============ */
+(function(){
+  const tip = $("tip"), stage = $("stage");
+  function hide(){ tip.hidden = true; }
+  function show(card){
+    if(document.body.classList.contains("dragging")) return;                  // not while the tree is being moved
+    tip.textContent = card.dataset.role; tip.hidden = false; tip.classList.remove("below");
+    const r = card.getBoundingClientRect();
+    let y = r.top - 8;
+    if(r.top < 50){ tip.classList.add("below"); y = r.bottom + 8; }          // no room above: show underneath
+    tip.style.left = (r.left + r.width / 2) + "px"; tip.style.top = y + "px";
+  }
+  stage.addEventListener("mouseover", e => { const c = e.target.closest(".card[data-role]"); if(c) show(c); });
+  stage.addEventListener("mouseout", e => { const c = e.target.closest(".card[data-role]"); if(c && !c.contains(e.relatedTarget)) hide(); });
+  stage.addEventListener("focusin", e => { const c = e.target.closest(".card[data-role]"); if(c) show(c); });
+  stage.addEventListener("focusout", hide);
+  ["pointerdown", "wheel", "keydown"].forEach(ev => document.addEventListener(ev, hide, {passive:true, capture:true}));   // never left behind when the tree moves or a popup opens
+})();
 /* ============ GREETING AND WISDOM OF THE DAY ============ */
 (function(){
   const box = $("greet"); if(!box) return;
