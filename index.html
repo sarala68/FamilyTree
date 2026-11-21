@@ -81,6 +81,12 @@ body.dragging, body.dragging *{cursor:grabbing !important}
 #tip.below::after{bottom:auto;top:-6px;border:0;border-left:1px solid var(--brass);border-top:1px solid var(--brass)}
 .rolerow{text-align:center;margin:-2px 0 6px}
 .rolebadge{display:inline-block;padding:2px 12px;border-radius:999px;background:var(--brass);color:#1b1608;font:700 12px "Segoe UI",system-ui,sans-serif;letter-spacing:.4px;text-transform:uppercase}
+#big{display:flex;justify-content:center;padding-top:4px}
+.bigtilt{transform:perspective(520px) rotateX(var(--ax,0deg)) rotateY(var(--ay,0deg));transition:transform .14s ease-out}
+.bigtilt .avatar{animation:bigIn .55s cubic-bezier(.2,.9,.25,1.25) both,bigFloat 5s ease-in-out .55s infinite}
+@keyframes bigIn{from{transform:scale(.55) rotate(-10deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes bigFloat{0%,100%{transform:translateY(0) rotate(-1.4deg)}50%{transform:translateY(-6px) rotate(1.4deg)}}
+@media (prefers-reduced-motion:reduce){.bigtilt .avatar{animation:none}.bigtilt{transition:none}}
 #viewLabel{font:italic 15px Georgia,serif;opacity:.9;margin-right:6px}
 #stage{position:absolute;left:0;top:0;transform-origin:0 0}
 svg#lines{position:absolute;left:0;top:0;pointer-events:none}
@@ -755,7 +761,7 @@ function showPerson(id){
     ${p.notes ? `<div class="notes">${esc(p.notes)}</div>` : ""}
     <div class="addrow"><span>Add to ${esc(p.name || "this person")}:</span><button id="aSp" data-gate>+ Spouse</button><button id="aCh" data-gate>+ Child</button><button id="aPa" data-gate>+ Parent</button><button id="aSb" data-gate>+ Sibling</button></div>
     <div class="btns"><button class="danger" id="bDel" data-gate>Delete</button><button id="bFocus">Show their family</button><button id="bClose">Close</button><button class="primary" id="bEdit">Edit</button></div>`;
-  $("big").appendChild(avatar(p, 150));
+  { const w = document.createElement("div"); w.className = "bigtilt"; w.appendChild(avatar(p, 150)); $("big").appendChild(w); }
   body.querySelectorAll("[data-av]").forEach(el => { const r = byId(el.dataset.av); if(r) el.appendChild(avatar(r, 30)); });
   body.querySelectorAll("[data-go]").forEach(a => a.onclick = () => showPerson(a.dataset.go));
   $("bClose").onclick = () => dlg.close();
@@ -1197,6 +1203,21 @@ updateLock();
     });
   });
   stage.addEventListener("mouseout", e => { const c = e.target.closest(".card"); if(c && !c.contains(e.relatedTarget)) reset(c); });
+})();
+/* ============ DETAILS PHOTO: gently floats, and leans towards the pointer ============ */
+(function(){
+  const dlgEl = $("dlg"), fine = window.matchMedia && matchMedia("(hover:hover) and (pointer:fine)").matches, calm = window.matchMedia && matchMedia("(prefers-reduced-motion:reduce)").matches;
+  if(!fine || calm) return;
+  const lean = (w, ax, ay) => { w.style.setProperty("--ax", ax.toFixed(1) + "deg"); w.style.setProperty("--ay", ay.toFixed(1) + "deg"); };
+  dlgEl.addEventListener("mousemove", e => {
+    const w = dlgEl.querySelector(".bigtilt"); if(!w) return;
+    const r = w.getBoundingClientRect();
+    const px = e.clientX - (r.left + r.width / 2), py = e.clientY - (r.top + r.height / 2);
+    const dx = Math.max(-1, Math.min(1, px / 260)), dy = Math.max(-1, Math.min(1, py / 260));
+    const near = Math.max(0, Math.min(1, 1 - (Math.hypot(px, py) - 260) / 300));            // the further the pointer, the calmer the photo
+    lean(w, -dy * 14 * near, dx * 16 * near);
+  });
+  dlgEl.addEventListener("mouseleave", () => { const w = dlgEl.querySelector(".bigtilt"); if(w) lean(w, 0, 0); });
 })();
 /* ============ GREETING AND WISDOM OF THE DAY ============ */
 (function(){
