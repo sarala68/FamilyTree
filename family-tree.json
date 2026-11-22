@@ -4898,5 +4898,47 @@
     "notes": "",
     "deceased": false,
     "fb": ""
+  },
+  {
+    "id": "pmwrznr2g32xq",
+    "name": "THANGAM",
+    "gender": "F",
+    "birth": "",
+    "death": "",
+    "photo": "",
+    "spouse": "",
+    "father": "pmwrr8x4c1v6q",
+    "mother": "",
+    "notes": "",
+    "deceased": true,
+    "fb": ""
+  },
+  {
+    "id": "pmwrzos9zdzn0",
+    "name": "PARKIAM",
+    "gender": "F",
+    "birth": "",
+    "death": "",
+    "photo": "",
+    "spouse": "",
+    "father": "",
+    "mother": "pmwrznr2g32xq",
+    "notes": "",
+    "deceased": false,
+    "fb": ""
+  },
+  {
+    "id": "pmwrzp6wfxfx5",
+    "name": "DHANA LAKSHMI",
+    "gender": "F",
+    "birth": "",
+    "death": "",
+    "photo": "",
+    "spouse": "",
+    "father": "",
+    "mother": "pmwrznr2g32xq",
+    "notes": "",
+    "deceased": false,
+    "fb": ""
   }
 ]
