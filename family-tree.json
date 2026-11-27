@@ -4951,7 +4951,9 @@
     "spouse": "pmwxptw345eak",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false,
+    "fb": ""
   },
   {
     "id": "pmwxptw345eak",
@@ -4963,7 +4965,9 @@
     "spouse": "pmwxptw348xoe",
     "father": "",
     "mother": "",
-    "notes": ""
+    "notes": "",
+    "deceased": false,
+    "fb": ""
   },
   {
     "id": "pmwxptw37yh9q",
@@ -4976,7 +4980,7 @@
     "father": "pmwxptw348xoe",
     "mother": "pmwxptw345eak",
     "notes": "",
-    "deceased": false,
+    "deceased": true,
     "fb": ""
   }
 ]
